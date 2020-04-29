@@ -10,7 +10,6 @@ class EstatisticaController extends Controller
 {
     public function index() 
     {
-       
         return view('estatisticas.index');
     }
 }

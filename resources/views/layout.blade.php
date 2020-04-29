@@ -44,9 +44,9 @@
                     <i class="far fa-file"></i>
                     <a href="{{route('estatisticas.index')}}">Estatisticas</a>
                 </li>
-                <li class="{{Route::currentRouteName() == 'definicaos.index' ? 'sel' : ''}}">
+                <li class="{{Route::currentRouteName() == 'definicoes.index' ? 'sel' : ''}}">
                     <i class="fa fa-bars"></i>
-                    <a href="{{route('definicaos.index')}}">Definicões</a>
+                    <a href="{{route('definicoes.index')}}">Definicões</a>
                 </li>
             
             

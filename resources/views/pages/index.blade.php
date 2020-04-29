@@ -8,9 +8,9 @@
 <h3>Informações</h3>
 <form action="PageController.php" method="get">
         <div>
-            <p>Numero de Utilizadores:  {{ $users }}</p>
-            <p>Numero de Contas:  {{ $contas }}</p>
-            <p>Numero de Movimentos:  {{ $movimentos}}</p>
+            <p>Número de Utilizadores:  {{ $users }}</p>
+            <p>Número de Contas:  {{ $contas }}</p>
+            <p>Número de Movimentos:  {{ $movimentos}}</p>
         </div>
 </form>
 

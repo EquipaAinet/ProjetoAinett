@@ -21,7 +21,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', 'PageController@index')->name('home');
 Route::get('movimentos', 'MovimentoController@index')->name('movimentos.index');
 Route::get('estatisticas', 'EstatisticaController@index')->name('estatisticas.index');
-Route::get('definicaos', 'DefinicaoController@index')->name('definicaos.index');
+Route::get('definicoes', 'DefinicaoController@index')->name('definicoes.index');
 
 
 
