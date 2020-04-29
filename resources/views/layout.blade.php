@@ -44,10 +44,6 @@
                     <i class="far fa-file"></i>
                     <a href="{{route('estatisticas.index')}}">Estatisticas</a>
                 </li>
-                <li class="{{Route::currentRouteName() == 'gerir.index' ? 'sel' : ''}}">
-                    <i class="far fa-file"></i>
-                    <a href="{{route('gerir.index')}}">Gerir(Admin)</a>
-                </li>
                 <li class="{{Route::currentRouteName() == 'definicaos.index' ? 'sel' : ''}}">
                     <i class="fa fa-bars"></i>
                     <a href="{{route('definicaos.index')}}">Definicões</a>
