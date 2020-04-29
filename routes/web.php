@@ -25,3 +25,7 @@ Route::get('definicoes', 'DefinicaoController@index')->name('definicoes.index');
 
 
 
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
