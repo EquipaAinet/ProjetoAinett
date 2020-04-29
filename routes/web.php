@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,8 +25,10 @@ Route::get('estatisticas', 'EstatisticaController@index')->name('estatisticas.in
 Route::get('definicoes', 'DefinicaoController@index')->name('definicoes.index');
 
 
+Route::get('menu', function(){
+    dd(Auth::User());
+})->middleware('auth');
 
-
-Auth::routes();
+Auth::routes(['verify' => true]);
 
 Route::get('/home', 'HomeController@index')->name('home');
