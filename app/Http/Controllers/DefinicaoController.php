@@ -10,6 +10,6 @@ class DefinicaoController extends Controller
     public function index() 
     {
        
-        return view('definicaos.index');
+        return view('definicoes.index');
     }
 }

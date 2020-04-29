@@ -2,6 +2,6 @@
 
 @section('content')
 
-<h2>Definicoes</h2>
+<h2>Definicões</h2>
 
 @endsection
