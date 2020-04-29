@@ -36,6 +36,11 @@
                     <i class="fas fa-info-circle"></i>
                     <a href="{{route('home')}}">Apresentação</a>
             </ul>
+            <ul>
+                <li class="{{Route::currentRouteName() == 'movimentos.index' ? 'sel' : ''}}">
+                    <i class="fas fa-info-circle"></i>
+                    <a href="{{route('movimentos.index')}}">Apresentação</a>
+            </ul>
         </nav>
 
         <section id="main">
