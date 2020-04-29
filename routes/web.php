@@ -19,6 +19,9 @@ use Illuminate\Support\Facades\Route;
 // });
 
 Route::get('/', 'PageController@index')->name('home');
+Route::get('movimentos', 'MovimentoController@index')->name('movimentos.index');
+
+
 Route::get('disciplinas', 'DisciplinaController@index')->name('disciplinas.index');
 
 Route::get('cursos', 'CursoController@index')->name('cursos.index');

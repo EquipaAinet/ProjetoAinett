@@ -35,11 +35,14 @@
                 <li class="{{Route::currentRouteName() == 'home' ? 'sel' : ''}}">
                     <i class="fas fa-info-circle"></i>
                     <a href="{{route('home')}}">Apresentação</a>
-            </ul>
-            <ul>
+                </li>
                 <li class="{{Route::currentRouteName() == 'movimentos.index' ? 'sel' : ''}}">
-                    <i class="fas fa-info-circle"></i>
-                    <a href="{{route('movimentos.index')}}">Apresentação</a>
+                    <i class="far fa-file"></i>
+                    <a href="{{route('movimentos.index')}}">Movimentos</a>
+                </li>
+            
+            
+                
             </ul>
         </nav>
 
