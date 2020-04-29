@@ -45,7 +45,7 @@
                     <a href="{{route('estatisticas.index')}}">Estatisticas</a>
                 </li>
                 <li class="{{Route::currentRouteName() == 'definicaos.index' ? 'sel' : ''}}">
-                    <i class="fa fa-bars" style="color:white;"></i>
+                    <i class="fa fa-bars"></i>
                     <a href="{{route('definicaos.index')}}">Definicões</a>
                 </li>
             
