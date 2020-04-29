@@ -40,6 +40,14 @@
                     <i class="far fa-file"></i>
                     <a href="{{route('movimentos.index')}}">Movimentos</a>
                 </li>
+                <li class="{{Route::currentRouteName() == 'estatisticas.index' ? 'sel' : ''}}">
+                    <i class="far fa-file"></i>
+                    <a href="{{route('estatisticas.index')}}">Estatisticas</a>
+                </li>
+                <li class="{{Route::currentRouteName() == 'definicaos.index' ? 'sel' : ''}}">
+                    <i class="fa fa-bars" style="color:white;"></i>
+                    <a href="{{route('definicaos.index')}}">Definicões</a>
+                </li>
             
             
                 
