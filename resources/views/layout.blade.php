@@ -8,6 +8,7 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
     <link rel="stylesheet" href="/css/estilos.css">
+    
 
     <title>Example</title>
 </head>
@@ -35,6 +36,8 @@
             @endif
         </div>
 
+        
+
         <div id="menuIcon">
             <div class="bar1"></div>
             <div class="bar2"></div>
@@ -42,6 +45,7 @@
         </div>
     </header>
     <div class="container">
+
         @if (Route::has('login'))
             @auth
             <nav>
@@ -62,6 +66,8 @@
                         <i class="fa fa-bars"></i>
                         <a href="{{route('definicoes.index')}}">Definicões</a>
                     </li>
+
+        
                 
                 
                     
