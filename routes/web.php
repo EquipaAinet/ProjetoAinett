@@ -19,16 +19,18 @@ use Illuminate\Support\Facades\Auth;
 //     return view('pages.index');
 // });
 
-Route::get('/', 'PageController@index')->name('homepage');
-Route::get('movimentos', 'MovimentoController@index')->name('movimentos.index');
-Route::get('estatisticas', 'EstatisticaController@index')->name('estatisticas.index');
-Route::get('definicoes', 'DefinicaoController@index')->name('definicoes.index');
+Route::get('/', 'PageController@index')->name('pages.index');
+Route::get('movimentos', 'MovimentoController@index')->name('movimentos.index')->middleware('auth');
+Route::get('estatisticas', 'EstatisticaController@index')->name('estatisticas.index')->middleware('auth');
+Route::get('definicoes', 'DefinicaoController@index')->name('definicoes.index')->middleware('auth');
 
 
-Route::get('menu', function(){
-    return view('layout');
-})->middleware('auth');
+//Route::get('menu', function(){
+//    return view('layout');
+//})->middleware('auth');
 
 Auth::routes(['verify' => true]);
 
-Route::get('/home', 'HomeController@index')->name('home');
+//Route::get('/home', 'HomeController@logout')->name('home');
+Route::get('logout', 'Auth\LoginController@logout'); //logout
+

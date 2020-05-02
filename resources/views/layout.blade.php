@@ -24,7 +24,7 @@
             @if (Route::has('login'))
                 <div class="top-right links">
                     @auth
-                        <a href="{{ url('/home') }}">Home</a>
+                        <a href="{{ route('logout') }}">Logout</a>
                     @else
                         <a href="{{ route('login') }}">Login</a>
 
@@ -50,9 +50,9 @@
             @auth
             <nav>
                 <ul>
-                    <li class="{{Route::currentRouteName() == 'home' ? 'sel' : ''}}">
+                    <li class="{{Route::currentRouteName() == 'pages.index' ? 'sel' : ''}}">
                         <i class="fas fa-info-circle"></i>
-                        <a href="{{route('home')}}">Apresentação</a>
+                        <a href="{{route('pages.index')}}">Apresentação</a>
                     </li>
                     <li class="{{Route::currentRouteName() == 'movimentos.index' ? 'sel' : ''}}">
                         <i class="far fa-file"></i>
@@ -68,6 +68,7 @@
                     </li>
                 </ul>
             </nav>
+            
             @endauth
         @endif
     
