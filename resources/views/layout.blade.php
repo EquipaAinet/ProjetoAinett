@@ -66,11 +66,6 @@
                         <i class="fa fa-bars"></i>
                         <a href="{{route('definicoes.index')}}">Definicões</a>
                     </li>
-
-        
-                
-                
-                    
                 </ul>
             </nav>
             @endauth
