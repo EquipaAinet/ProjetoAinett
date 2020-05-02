@@ -46,8 +46,8 @@
     </header>
     <div class="container">
 
-        @if (Route::has('login'))
-            @auth
+        
+            @auth {{--verificar se está autenticado--}}
             <nav>
                 <ul>
                     <li class="{{Route::currentRouteName() == 'pages.index' ? 'sel' : ''}}">
@@ -70,7 +70,7 @@
             </nav>
             
             @endauth
-        @endif
+        
     
         <section id="main">
             <div class="content">
