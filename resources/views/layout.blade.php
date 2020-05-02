@@ -42,30 +42,34 @@
         </div>
     </header>
     <div class="container">
-        <nav>
-            <ul>
-                <li class="{{Route::currentRouteName() == 'home' ? 'sel' : ''}}">
-                    <i class="fas fa-info-circle"></i>
-                    <a href="{{route('home')}}">Apresentação</a>
-                </li>
-                <li class="{{Route::currentRouteName() == 'movimentos.index' ? 'sel' : ''}}">
-                    <i class="far fa-file"></i>
-                    <a href="{{route('movimentos.index')}}">Movimentos</a>
-                </li>
-                <li class="{{Route::currentRouteName() == 'estatisticas.index' ? 'sel' : ''}}">
-                    <i class="far fa-file"></i>
-                    <a href="{{route('estatisticas.index')}}">Estatisticas</a>
-                </li>
-                <li class="{{Route::currentRouteName() == 'definicoes.index' ? 'sel' : ''}}">
-                    <i class="fa fa-bars"></i>
-                    <a href="{{route('definicoes.index')}}">Definicões</a>
-                </li>
-            
-            
+        @if (Route::has('login'))
+            @auth
+            <nav>
+                <ul>
+                    <li class="{{Route::currentRouteName() == 'home' ? 'sel' : ''}}">
+                        <i class="fas fa-info-circle"></i>
+                        <a href="{{route('home')}}">Apresentação</a>
+                    </li>
+                    <li class="{{Route::currentRouteName() == 'movimentos.index' ? 'sel' : ''}}">
+                        <i class="far fa-file"></i>
+                        <a href="{{route('movimentos.index')}}">Movimentos</a>
+                    </li>
+                    <li class="{{Route::currentRouteName() == 'estatisticas.index' ? 'sel' : ''}}">
+                        <i class="far fa-file"></i>
+                        <a href="{{route('estatisticas.index')}}">Estatisticas</a>
+                    </li>
+                    <li class="{{Route::currentRouteName() == 'definicoes.index' ? 'sel' : ''}}">
+                        <i class="fa fa-bars"></i>
+                        <a href="{{route('definicoes.index')}}">Definicões</a>
+                    </li>
                 
-            </ul>
-        </nav>
-
+                
+                    
+                </ul>
+            </nav>
+            @endauth
+        @endif
+    
         <section id="main">
             <div class="content">
                 <div class="left-content">

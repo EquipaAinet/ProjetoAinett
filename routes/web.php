@@ -26,7 +26,7 @@ Route::get('definicoes', 'DefinicaoController@index')->name('definicoes.index');
 
 
 Route::get('menu', function(){
-    dd(Auth::User());
+    return view('layout');
 })->middleware('auth');
 
 Auth::routes(['verify' => true]);
