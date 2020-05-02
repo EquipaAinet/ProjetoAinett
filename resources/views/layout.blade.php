@@ -8,6 +8,7 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
     <link rel="stylesheet" href="/css/estilos.css">
+    
 
     <title>Example</title>
 </head>
@@ -35,6 +36,8 @@
             @endif
         </div>
 
+        
+
         <div id="menuIcon">
             <div class="bar1"></div>
             <div class="bar2"></div>
@@ -44,9 +47,9 @@
     <div class="container">
         <nav>
             <ul>
-                <li class="{{Route::currentRouteName() == 'home' ? 'sel' : ''}}">
+                <li class="{{Route::currentRouteName() == 'homepage' ? 'sel' : ''}}">
                     <i class="fas fa-info-circle"></i>
-                    <a href="{{route('home')}}">Apresentação</a>
+                    <a href="{{route('homepage')}}">Apresentação</a>
                 </li>
                 <li class="{{Route::currentRouteName() == 'movimentos.index' ? 'sel' : ''}}">
                     <i class="far fa-file"></i>

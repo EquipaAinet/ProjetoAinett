@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Auth;
 //     return view('pages.index');
 // });
 
-Route::get('/', 'PageController@index')->name('home');
+Route::get('/', 'PageController@index')->name('homepage');
 Route::get('movimentos', 'MovimentoController@index')->name('movimentos.index');
 Route::get('estatisticas', 'EstatisticaController@index')->name('estatisticas.index');
 Route::get('definicoes', 'DefinicaoController@index')->name('definicoes.index');
