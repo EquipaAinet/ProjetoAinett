@@ -21,7 +21,7 @@ use Illuminate\Support\Facades\Auth;
 
 Route::get('/', 'PageController@index')->name('pages.index');
 Route::get('movimentos', 'MovimentoController@index')->name('movimentos.index')->middleware('auth');
-Route::get('estatisticas', 'EstatisticaController@index')->name('estatisticas.index')->middleware('auth');
+Route::get('estatisticas', 'EstatisticaController@index')->name('estatisticas.index')->middleware('auth'); //tem acesso se tiver autenticado
 Route::get('definicoes', 'DefinicaoController@index')->name('definicoes.index')->middleware('auth');
 
 
@@ -29,7 +29,7 @@ Route::get('definicoes', 'DefinicaoController@index')->name('definicoes.index')-
 //    return view('layout');
 //})->middleware('auth');
 
-Auth::routes(['verify' => true]);
+Auth::routes(['verify' => true]);//ver se conta esta veridicada
 
 //Route::get('/home', 'HomeController@logout')->name('home');
 Route::get('logout', 'Auth\LoginController@logout'); //logout
