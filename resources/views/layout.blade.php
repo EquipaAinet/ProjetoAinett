@@ -25,6 +25,8 @@
                 <div class="top-right links">
                     @auth
                         <a href="{{ route('logout') }}">Logout</a>
+                        <h4>Utilizador:{{ Auth::user()->name }}<h4>
+
                     @else
                         <a href="{{ route('login') }}">Login</a>
 
