@@ -134,6 +134,10 @@ nav i{
     width:20px;
     font-size:12pt;
 }
+.pagination li{
+    display: inline;
+}
+
 .sel a, .sel, .sel i{
     color: darkred;
     background-color: silver;

@@ -1,9 +1,10 @@
-@extends('layout')
+@extends('layout_admin')
 @section('content')
 
 <h2>Movimentos</h2>
 
-<table>
+
+<table class="table">
     <tr>
         <th>Data</th>
         <th>Valor</th>
@@ -21,7 +22,11 @@
                 <td>{{$mov->tipo}}</td>
             </tr>
         @endforeach
+        
+
 </table>
+{{$movimentos->links()}}    
+       
        
 
 
