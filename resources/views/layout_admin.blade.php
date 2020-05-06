@@ -37,42 +37,40 @@
       <!-- Divider -->
       <hr class="sidebar-divider my-0">
 
-      <!-- Nav Item - Dashboard -->
-      <li class="nav-item {{Route::currentRouteName()=='admin.dashboard'? 'active': ''}}">
-        <a class="nav-link" href="{{route('admin.dashboard')}}">
-          <i class="fas fa-fw fa-tachometer-alt"></i>
-          <span>Dashboard</span></a>
-      </li>
-
       <!-- Divider -->
       <hr class="sidebar-divider">
 
 
       <!-- Nav Item -->
-        <li class="nav-item {{Route::currentRouteName()=='admin.cursos'? 'active': ''}}">
-            <a class="nav-link" href="{{route('admin.cursos')}}">
+        <li class="nav-item {{Route::currentRouteName() == 'pages.index' ?  'active' : ''}}">
+            <a class="nav-link" href="{{route('pages.index')}}">
           <i class="fas fa-fw fa-table"></i>
-              <span>Cursos</span></a>
+              <span>Apresentação</span></a>
           </li>
-
         <!-- Nav Item -->
-        <li class="nav-item {{Route::currentRouteName()=='admin.disciplinas'? 'active': ''}}">
-            <a class="nav-link" href="{{route('admin.disciplinas')}}">
+        <li class="nav-item {{Route::currentRouteName() == 'movimentos.index' ? 'sel' : ''}}">
+            <a class="nav-link" href="{{route('movimentos.index')}}">
               <i class="fas fa-fw fa-table"></i>
-              <span>Disciplinas</span></a>
+              <span>Movimentos</span></a>
           </li>
             <!-- Nav Item -->
-       <li class="nav-item {{Route::currentRouteName()=='admin.docentes'? 'active': ''}}">
-            <a class="nav-link" href="{{route('admin.docentes')}}">
+       <li class="nav-item {{Route::currentRouteName() == 'estatisticas.index' ? 'sel' : ''}}">
+            <a class="nav-link" href="{{route('estatisticas.index')}}">
           <i class="fas fa-fw fa-table"></i>
-          <span>Docentes</span></a>
+          <span>Estatisticas</span></a>
       </li>
         <!-- Nav Item -->
-       <li class="nav-item {{Route::currentRouteName()=='admin.alunos'? 'active': ''}}">
-            <a class="nav-link" href="{{route('admin.alunos')}}">
-              <i class="fas fa-fw fa-table"></i>
-              <span>Alunos</span></a>
-          </li>
+        <li class="nav-item {{Route::currentRouteName() == 'utilizadores.index' ? 'sel' : ''}}">
+            <a class="nav-link" href="{{route('utilizadores.index')}}">
+                <i class="fas fa-fw fa-table"></i>
+                <span>Utilizadores</span></a>
+        </li>
+        <!-- Nav Item -->
+        <li class="nav-item {{Route::currentRouteName() == 'definicoes.index' ? 'sel' : ''}}">
+            <a class="nav-link" href="{{route('definicoes.index')}}">
+                <i class="fas fa-fw fa-table"></i>
+                <span>Definicões</span></a>
+        </li>
 
       <!-- Divider -->
       <hr class="sidebar-divider d-none d-md-block">
@@ -103,7 +101,7 @@
             <!-- Nav Item - User Information -->
             <li class="nav-item dropdown no-arrow">
               <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Valerie Luna</span>
+                <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{ Auth::user()->name }}</span>
                 <img class="img-profile rounded-circle" src="/img/default_img.png">
               </a>
               <!-- Dropdown - User Information -->
@@ -189,7 +187,7 @@
         <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
         <div class="modal-footer">
           <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-          <a class="btn btn-primary" href="login.html">Logout</a>
+          <a class="btn btn-primary" href="{{ route('logout') }}">Logout</a>
         </div>
       </div>
     </div>

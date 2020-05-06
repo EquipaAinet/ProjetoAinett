@@ -8,7 +8,7 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
     <link rel="stylesheet" href="/css/estilos.css">
-    
+
 
     <title>Example</title>
 </head>
@@ -25,7 +25,7 @@
                 <div class="top-right links">
                     @auth
                         <a href="{{ route('logout') }}">Logout</a>
-                        <h4>Utilizador:{{ Auth::user()->name }}<h4>
+                        <h4>Utilizador:{{ Auth::user()->name }}</h4>
 
                     @else
                         <a href="{{ route('login') }}">Login</a>
@@ -38,7 +38,7 @@
             @endif
         </div>
 
-        
+
 
         <div id="menuIcon">
             <div class="bar1"></div>
@@ -48,7 +48,7 @@
     </header>
     <div class="container">
 
-        
+
             @auth {{--verificar se está autenticado--}}
             <nav>
                 <ul>
@@ -64,16 +64,20 @@
                         <i class="far fa-file"></i>
                         <a href="{{route('estatisticas.index')}}">Estatisticas</a>
                     </li>
+                    <li class="{{Route::currentRouteName() == 'utilizadores.index' ? 'sel' : ''}}">
+                        <i class="fa fa-user"></i>
+                        <a href="{{route('utilizadores.index')}}">Utilizadores</a>
+                    </li>
                     <li class="{{Route::currentRouteName() == 'definicoes.index' ? 'sel' : ''}}">
                         <i class="fa fa-bars"></i>
                         <a href="{{route('definicoes.index')}}">Definicões</a>
                     </li>
                 </ul>
             </nav>
-            
+
             @endauth
-        
-    
+
+
         <section id="main">
             <div class="content">
                 <div class="left-content">

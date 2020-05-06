@@ -23,6 +23,7 @@ Route::get('/', 'PageController@index')->name('pages.index');
 Route::get('movimentos', 'MovimentoController@index')->name('movimentos.index')->middleware('auth');
 Route::get('estatisticas', 'EstatisticaController@index')->name('estatisticas.index')->middleware('auth'); //tem acesso se tiver autenticado
 Route::get('definicoes', 'DefinicaoController@index')->name('definicoes.index')->middleware('auth');
+Route::get('utilizadores', 'UserController@index')->name('utilizadores.index')->middleware('auth');
 
 
 //Route::get('menu', function(){
@@ -34,3 +35,7 @@ Auth::routes(['verify' => true]);//ver se conta esta veridicada
 //Route::get('/home', 'HomeController@logout')->name('home');
 Route::get('logout', 'Auth\LoginController@logout'); //logout
 
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
