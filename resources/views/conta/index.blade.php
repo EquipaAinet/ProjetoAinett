@@ -2,5 +2,5 @@
 @section('content')
 
 <h2>Movimentos</h2>
-<p>  </p>
+<p> {{$contas}}</p>
 @endsection

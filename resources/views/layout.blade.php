@@ -56,9 +56,9 @@
                         <i class="fas fa-info-circle"></i>
                         <a href="{{route('pages.index')}}">Apresentação</a>
                     </li>
-                    <li class="{{Route::currentRouteName() == 'movimentos.index' ? 'sel' : ''}}">
+                    <li class="{{Route::currentRouteName() == 'conta.index' ? 'sel' : ''}}">
                         <i class="far fa-file"></i>
-                        <a href="{{route('movimentos.index')}}">Movimentos</a>
+                        <a href="{{route('conta.index')}}">Contas</a>
                     </li>
                     <li class="{{Route::currentRouteName() == 'estatisticas.index' ? 'sel' : ''}}">
                         <i class="far fa-file"></i>
