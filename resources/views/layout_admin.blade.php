@@ -48,10 +48,10 @@
               <span>Apresentação</span></a>
           </li>
         <!-- Nav Item -->
-        <li class="nav-item {{Route::currentRouteName() == 'movimentos.index' ? 'sel' : ''}}">
-            <a class="nav-link" href="{{route('movimentos.index')}}">
+        <li class="nav-item {{Route::currentRouteName() == 'conta.index' ? 'sel' : ''}}">
+            <a class="nav-link" href="{{route('conta.index')}}">
               <i class="fas fa-fw fa-table"></i>
-              <span>Movimentos</span></a>
+              <span>Contas</span></a>
           </li>
             <!-- Nav Item -->
        <li class="nav-item {{Route::currentRouteName() == 'estatisticas.index' ? 'sel' : ''}}">
