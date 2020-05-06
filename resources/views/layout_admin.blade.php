@@ -7,7 +7,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-  <title>Dashboard</title>
+  <title>Projeto</title>
 
   <!-- Custom fonts for this template-->
   <link href="{{asset('vendor/fontawesome-free/css/all.min.css')}}" rel="stylesheet" type="text/css">
@@ -40,7 +40,7 @@
       <!-- Divider -->
       <hr class="sidebar-divider">
 
-
+    @auth
       <!-- Nav Item -->
         <li class="nav-item {{Route::currentRouteName() == 'pages.index' ?  'active' : ''}}">
             <a class="nav-link" href="{{route('pages.index')}}">
@@ -72,6 +72,8 @@
                 <span>Definicões</span></a>
         </li>
 
+        @endauth
+
       <!-- Divider -->
       <hr class="sidebar-divider d-none d-md-block">
 
@@ -90,6 +92,29 @@
       <div id="content">
 
         <!-- Topbar -->
+        @guest
+        <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+        <div class="flex-center position-ref full-height">
+            @if (Route::has('login'))
+                <div class="top-right links">
+                    @auth
+                        <a href="{{ route('logout') }}">Logout</a>
+                        <h4>Utilizador:{{ Auth::user()->name }}</h4>
+
+                    @else
+                        <a href="{{ route('login') }}">Login</a>
+
+                        @if (Route::has('register'))
+                            <a href="{{ route('register') }}">Register</a>
+                        @endif
+                    @endauth
+                </div>
+            @endif
+        </div>
+        </nav>
+        @endguest
+
+        @auth
         <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 
           <!-- Sidebar Toggle (Topbar) -->
@@ -121,6 +146,7 @@
           </ul>
 
         </nav>
+        @endauth
         <!-- End of Topbar -->
 
         <!-- Begin Page Content -->
