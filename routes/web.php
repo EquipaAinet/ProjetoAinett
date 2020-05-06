@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Auth;
 
 Route::get('/', 'PageController@index')->name('pages.index');
 Route::get('contas', 'ContaController@index')->name('conta.index')->middleware('auth');
+Route::get('movimentos', 'MovimentoController@index')->name('movimento.index')->middleware('auth');
 Route::get('estatisticas', 'EstatisticaController@index')->name('estatisticas.index')->middleware('auth'); //tem acesso se tiver autenticado
 Route::get('definicoes', 'DefinicaoController@index')->name('definicoes.index')->middleware('auth');
 Route::get('utilizadores', 'UserController@index')->name('utilizadores.index')->middleware('auth');

@@ -11,7 +11,7 @@ class ContaController extends Controller
 {
     public function index(){
         $userId = Auth::id();
-        $contas=Conta::where('user_id',$userId)->get(['nome', 'descricao','saldo_atual']);
+        $contas=Conta::where('user_id',$userId)->get();
         return view('conta.index', compact('contas'));
     } 
 }
