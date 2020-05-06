@@ -2,10 +2,24 @@
 @section('title','Lista de Utilizadores' )
 @section('content')
 
-    @foreach ($listaUtilizadores as $user)
-        <span>Utilizador: <b>{{ $user->name }}</b>, Email: <b>{{ $user->email }}</b></span>
-        <br />
-    @endforeach
+    
 
+   
+    <table class="table">
+    <tr>
+        
+        <th>Nome</th>
+        <th>Email</th>
+        
+        
+    </tr>
+        @foreach ($listaUtilizadores as $user)
+            <tr>
+                <td>{{ $user->name }}</td>
+                <td>{{ $user->email }}</td> 
+            </tr>
+        @endforeach
+    </table>
     {{ $listaUtilizadores->withQueryString()->links() }}
+
 @endsection

@@ -1,4 +1,4 @@
-@extends('layout')
+@extends('layout_admin')
 @section('content')
 
 <h2>Contas</h2>
@@ -6,7 +6,7 @@
 
        
 
-<table>
+<table class="table">
     <tr>
         
         <th>Contas</th>
