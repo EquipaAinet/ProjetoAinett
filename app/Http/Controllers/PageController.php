@@ -16,4 +16,5 @@ class PageController extends Controller
         $movimentos = Movimento::count();
         return view('pages.index', compact('users', 'contas', 'movimentos'));
     }
+
 }
