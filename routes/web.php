@@ -26,6 +26,11 @@ Route::get('estatisticas', 'EstatisticaController@index')->name('estatisticas.in
 Route::get('definicoes', 'DefinicaoController@index')->name('definicoes.index')->middleware('auth');
 Route::get('utilizadores', 'UserController@index')->name('utilizadores.index')->middleware('auth');
 
+Route::get('conta/{conta}/edit', 'ContaController@edit')->name('conta.edit');
+Route::put('conta/{conta}', 'ContaController@update')->name('conta.update');
+Route::post('contas', 'ContaController@store')->name('conta.store');
+Route::get('conta/create', 'ContaController@create')->name('conta.create');
+Route::delete('conta{conta}', 'ContaController@destroy')->name('conta.destroy');
 
 //Route::get('menu', function(){
 //    return view('layout');
