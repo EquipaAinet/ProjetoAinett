@@ -54,6 +54,7 @@ class RegisterController extends Controller
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'NIF'=>['nullable','digits:9'],
             'telefone'=>['nullable','digits:9'],
+            'foto'=>['nullable','image','max:8192'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
     }
@@ -65,13 +66,22 @@ class RegisterController extends Controller
      * @return \App\User
      */
     protected function create(array $data)
-    {
+    {   
+        if(request()->hasFile('foto')){
+            
+            $path = request()->foto->store('public/fotos');
+            $urlFoto = basename($path);
+        }
+
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'NIF' => $data['NIF'],
             'telefone'=>$data['telefone'],
+            'foto'=>$urlFoto,
             'password' => Hash::make($data['password']),
         ]);
+
+        
     }
 }
