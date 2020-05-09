@@ -17,14 +17,18 @@ class DefinicaoController extends Controller
     }
     public function edit() 
     {
-        $user = Auth::id();
        
-        return view('definicoes.edit')->withUser($user);
+       
+        return view('definicoes.edit')->with('user',Auth::User());
     }
     public function update(Request $request,User $user) 
     {
-        
-        return view('definicoes.edit');
+        $user->fill($request->all());
+        $user->save();
+        return redirect()->route('definicoes.edit')
+            ->with('alert-msg', 'Conta "' . $user->nome . '" foi alterada com sucesso!')
+            ->with('alert-type', 'success');
+       
     }
    
 }

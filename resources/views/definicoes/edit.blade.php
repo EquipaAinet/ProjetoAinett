@@ -1,10 +1,10 @@
 @extends('layout_admin')
 @section('content')
 <h3>{{ __('Editar Perfil') }}</h3>
-    <form method="POST" action="{{route('definicoes.update', ['user' =>$user]) }}" class="multipart/form-data">
+    <form method="POST" action="#" class="multipart/form-data">
         @csrf
         @method('PUT')
-        
+        <h1>{{$user->name}}</h1>
        
         
         <div class="form-group text-right">

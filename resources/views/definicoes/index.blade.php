@@ -6,7 +6,7 @@
 
 <ul>
     <li>
-        <a href="{{route('definicoes.edit') }}">Editar Perfil</a>
+        <a href="{{route('definicoes.edit')}}">Editar Perfil</a>
     </li>
 
 
