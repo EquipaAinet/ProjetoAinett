@@ -32,6 +32,10 @@ Route::post('contas', 'ContaController@store')->name('conta.store');
 Route::get('conta/create', 'ContaController@create')->name('conta.create');
 Route::delete('conta{conta}', 'ContaController@destroy')->name('conta.destroy');
 
+//User
+Route::get('definicoes/edit', 'DefinicaoController@edit')->name('definicoes.edit');
+Route::put('definicoes/{user}', 'DefinicaoController@update')->name('definicoes.update');
+
 //Route::get('menu', function(){
 //    return view('layout');
 //})->middleware('auth');
