@@ -1,4 +1,12 @@
 <div class="form-group">
+    <label for="inputUserID">ID de utilizador</label>
+    <input type="text" class="form-control" name="user_id" id="inputUserID" value="{{Auth::user()->id}}" >
+    @error('user_id')
+        <div class="small text-danger">{{$message}}</div>
+    @enderror
+</div>
+
+<div class="form-group">
     <label for="inputNome">Nome</label>
     <input type="text" class="form-control" name="nome" id="inputNome" value="{{old('nome', $conta->nome)}}" >
     @error('nome')

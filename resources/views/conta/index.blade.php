@@ -30,10 +30,10 @@
                 <td>{{$cont->saldo_atual}}€</td>
                 <td><a href="{{route('conta.edit', ['conta' => $cont])}}" class="btn btn-primary btn-sm" role="button" aria-pressed="true">Alterar</a></td>
                     <td>
-                        <form action="#" method="POST">
+                        <form action="{{route('conta.destroy',['conta' => $cont])}}" method="POST">
                             @csrf
                             @method("DELETE")
-                            <input type="submit" class="btn btn-danger btn-sm" value="Apagar">
+                            <input type="submit" class="btn btn-danger btn-sm" value="Apagar" />
                         </form>
                     </td>
             </tr>

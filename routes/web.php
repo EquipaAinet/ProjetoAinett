@@ -30,7 +30,7 @@ Route::get('conta/{conta}/edit', 'ContaController@edit')->name('conta.edit');
 Route::put('conta/{conta}', 'ContaController@update')->name('conta.update');
 Route::post('contas', 'ContaController@store')->name('conta.store');
 Route::get('conta/create', 'ContaController@create')->name('conta.create');
-Route::delete('conta{conta}', 'ContaController@destroy')->name('conta.destroy');
+Route::delete('conta/{conta}', 'ContaController@destroy')->name('conta.destroy');
 
 //User
 Route::get('definicoes/edit', 'DefinicaoController@edit')->name('definicoes.edit');
