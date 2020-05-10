@@ -15,7 +15,7 @@
 
 <div class="form-group">
     <label for="inputSaldoAb">Saldo Abertura</label>
-    <input type="text" class="form-control" name="SaldoAb" id="inputSaldoAb" value="{{old('saldo_abertura', $conta->saldo_abertura)}}">
+    <input type="text" class="form-control" name="saldo_abertura" id="inputSaldoAb" value="{{old('saldo_abertura', $conta->saldo_abertura)}}">
     @error('SaldoAb')
         <div class="small text-danger">{{$message}}</div>
     @enderror
@@ -23,7 +23,7 @@
 
 <div class="form-group">
     <label for="inputSaldoAt">Saldo Atual</label>
-    <input type="text" class="form-control" name="SaldoAt" id="inputSaldoAt" value="{{old('saldo_atual', $conta->saldo_atual)}}">
+    <input type="text" class="form-control" name="saldo_atual" id="inputSaldoAt" value="{{old('saldo_atual', $conta->saldo_atual)}}">
     @error('SaldoAt')
         <div class="small text-danger">{{$message}}</div>
     @enderror
