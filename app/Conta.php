@@ -8,7 +8,7 @@ class Conta extends Model
 {
     public $timestamps = false;
 
-    protected $fillable = ['user_id', 'nome', 'saldo_abertura', 'saldo_atual', ];
+    protected $fillable = ['nome', 'descricao', 'saldo_abertura', 'saldo_atual'];
 
     public function movimentos()
     {

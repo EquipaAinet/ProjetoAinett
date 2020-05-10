@@ -16,7 +16,7 @@
 <div class="form-group">
     <label for="inputSaldoAb">Saldo Abertura</label>
     <input type="text" class="form-control" name="SaldoAb" id="inputSaldoAb" value="{{old('saldo_abertura', $conta->saldo_abertura)}}">
-    @error('ECTS')
+    @error('SaldoAb')
         <div class="small text-danger">{{$message}}</div>
     @enderror
 </div>
@@ -24,7 +24,7 @@
 <div class="form-group">
     <label for="inputSaldoAt">Saldo Atual</label>
     <input type="text" class="form-control" name="SaldoAt" id="inputSaldoAt" value="{{old('saldo_atual', $conta->saldo_atual)}}">
-    @error('ECTS')
+    @error('SaldoAt')
         <div class="small text-danger">{{$message}}</div>
     @enderror
 </div>
