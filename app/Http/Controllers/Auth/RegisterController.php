@@ -66,9 +66,11 @@ class RegisterController extends Controller
      * @return \App\User
      */
     protected function create(array $data)
-    {   
+    {
+        $urlFoto = null;
+
         if(request()->hasFile('foto')){
-            
+
             $path = request()->foto->store('public/fotos');
             $urlFoto = basename($path);
         }
@@ -82,6 +84,6 @@ class RegisterController extends Controller
             'password' => Hash::make($data['password']),
         ]);
 
-        
+
     }
 }
