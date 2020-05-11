@@ -24,7 +24,6 @@ Route::get('contas', 'ContaController@index')->name('conta.index')->middleware('
 Route::get('movimentos/{conta}', 'MovimentoController@index')->name('movimento.index')->middleware('auth');
 Route::get('estatisticas', 'EstatisticaController@index')->name('estatisticas.index')->middleware('auth'); //tem acesso se tiver autenticado
 Route::get('definicoes', 'DefinicaoController@index')->name('definicoes.index')->middleware('auth');
-Route::get('utilizadores', 'UserController@index')->name('utilizadores.index')->middleware('auth');
 
 
 //Contas
@@ -48,6 +47,8 @@ Route::delete('movimento/{movimento}', 'MovimentoController@destroy')->name('mov
 //User
 Route::get('definicoes/edit', 'DefinicaoController@edit')->name('definicoes.edit');
 Route::put('definicoes/{user}', 'DefinicaoController@update')->name('definicoes.update');
+Route::get('utilizadores', 'UserController@index')->name('utilizadores.index')->middleware('auth');
+Route::get('utilizadores/view/{id}', 'UserController@viewProfile')->name('utilizadores.view');
 
 //Route::get('menu', function(){
 //    return view('layout');
