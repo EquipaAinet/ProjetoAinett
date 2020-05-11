@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Auth;
 // });
 
 Route::get('/', 'PageController@index')->name('pages.index');
+Route::get('/home', 'PageController@index')->name('pages.index');
 Route::get('contas', 'ContaController@index')->name('conta.index')->middleware('auth');
 Route::get('movimentos/{conta}', 'MovimentoController@index')->name('movimento.index')->middleware('auth');
 Route::get('estatisticas', 'EstatisticaController@index')->name('estatisticas.index')->middleware('auth'); //tem acesso se tiver autenticado
@@ -49,4 +50,4 @@ Route::get('logout', 'Auth\LoginController@logout'); //logout
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+
