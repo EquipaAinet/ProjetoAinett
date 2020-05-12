@@ -10,8 +10,9 @@ class MovimentoController extends Controller
 {
     public function index(Conta $conta) 
     {
+        //dd($conta);
         $movimentos = Movimento::where('conta_id',$conta->id)->orderBy('data', 'DESC')->paginate(5);
-       return view('movimentos.index')->withMovimentos($movimentos);
+       return view('movimentos.index')->withMovimentos($movimentos)->withConta($conta);
     }
 
     public function edit(Movimento $movimento)
@@ -29,16 +30,23 @@ class MovimentoController extends Controller
             ->with('alert-type', 'success');
     }
 
-    public function create()
+    public function create(Conta $conta)
     {
-        $newMovimento = new Movimento;
-        return view('movimentos.create')
-            ->withMovimento($newMovimento);
+        $movimento = new Movimento;
+        $contaId = $conta->id;
+        //dd($newMovimento);
+        return view('movimentos.create', compact('contaId'))
+            ->withMovimento($movimento);
     }
 
-    public function store(Request $request)
+    public function store(Request $request, $contaId)
     {
-        $movimento=Movimento::create($request->all());
+        $movimento = Movimento::create();
+        dd($movimento);
+        $movimento->conta_id = $contaId;
+        $movimento->data =$request->data;
+        $movimento->valor = $request->valor;
+        $movimento->tipo = $request->tipo;
         return redirect()->route('conta.index')
             ->with('alert-msg', 'O Movimento "' . $movimento->id . '" foi criado com sucesso!')
             ->with('alert-type', 'success');

@@ -5,7 +5,7 @@
 
 <div class="row mb-3">
     <div class="col-3">
-        <a  href="{{route('movimentos.create')}}" class="btn btn-success" role="button" aria-pressed="true">Novo Movimento</a>
+        <a  href="{{route('movimentos.create', ['conta' => $conta])}}" class="btn btn-success" role="button" aria-pressed="true">Novo Movimento</a>
     </div>
 </div>
       
