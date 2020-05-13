@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
+
+
 use App\Conta;
 
 
@@ -30,7 +34,33 @@ class ContaController extends Controller
 
     public function store(Request $request)
     {
-        $conta=Conta::create($request->all());
+        $userId = Auth::id();
+        //$contas=Conta::where('user_id',$userId)->get();
+        $validated_data = $request->validate([
+            //'nome' => [
+                //'required','string','max:20',
+              //   Rule::unique('')->ignore($user->id),
+            //],
+            //'nome' =>                  'required|unique:contas,nome|string|max:20' .$user->id,
+            'nome' => Rule::unique('contas')->where('user_id',$userId),
+            'descricao' =>              'nullable|string|max:255',
+            'saldo_abertura' =>         'required|numeric',
+            'saldo_atual' =>            'required|numeric',
+            'deleted_at' =>             'nullable|timestamp',
+        ], [
+            //error messages
+            'nome.required' => '"Nome" is required.',
+            'saldo_abertura' => '"Saldo Abertura" is required.',
+            'saldo_atual' => '"Saldo atual" is required.',
+        ]);
+        $conta=Conta::create([
+            'user_id' => Auth::id(),
+            'nome' => $validated_data['nome'],
+            'descricao' => $validated_data['descricao'],
+            'saldo_abertura' => $validated_data['saldo_abertura'],
+            'saldo_atual' => $validated_data['saldo_atual'],
+        ]);
+        //dd($conta); 
         return redirect()->route('conta.index')
             ->with('alert-msg', 'Conta "' . $conta->nome . '" foi criada com sucesso!')
             ->with('alert-type', 'success');

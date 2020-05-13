@@ -24,13 +24,11 @@ class ContaPost extends FormRequest
     public function rules()
     {
         return [
-            'user_id' =>                'required|bigInteger',
             'nome' =>                   'required|string|max:20'
-            'descricao' =>              'required|string|max:255',
+            'descricao' =>              'nullable|string|max:255',
             'saldo_abertura' =>         'required|decimal',
             'saldo_atual' =>            'required|decimal',
-            'data_ultimo_movimento' =>  'required|date',
-            'deleted_at' =>             'required|timestamp',
+            'deleted_at' =>             'nullable|timestamp',
         ];
     }
 

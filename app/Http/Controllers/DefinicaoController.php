@@ -18,8 +18,6 @@ class DefinicaoController extends Controller
     }
     public function edit() 
     {
-       
-       
         return view('definicoes.edit')->with('user',Auth::User());
     }
     public function update(Request $request,User $user) 
