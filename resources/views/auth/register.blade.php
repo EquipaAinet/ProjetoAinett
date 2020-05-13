@@ -78,8 +78,8 @@
                         <div class="form-group row">
                             <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Telefone(Optional)') }}</label>
 
-                        <div class="col-md-6">
-                                <input id="telefone" type="text" class="form-control @error('NIF') is-invalid @enderror" name="telefone" value="{{ old('telefone')}}">
+                            <div class="col-md-6">
+                                <input id="telefone" type="text" class="form-control @error('telefone') is-invalid @enderror" name="telefone" value="{{ old('telefone')}}">
 
                                 @error('NIF')
                                     <span class="invalid-feedback" role="alert">
