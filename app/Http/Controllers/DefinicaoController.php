@@ -20,9 +20,9 @@ class DefinicaoController extends Controller
     {
         return view('definicoes.edit')->with('user',Auth::User());
     }
-<<<<<<< HEAD
+
     
-=======
+
     public function update(Request $request,User $user) 
     {
         $user->fill($request->all());
@@ -59,6 +59,6 @@ class DefinicaoController extends Controller
                 ->with('alert-type', 'danger');
         }
     }
->>>>>>> 654924f1a93421959999c92ca92cf1b585ccec7c
+
    
 }

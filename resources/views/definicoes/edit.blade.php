@@ -4,7 +4,7 @@
     <form method="POST" action="{{route('user.update', ['user' => $user])}}" enctype="multipart/form-data">
         @csrf
         @method('PUT')
-<<<<<<< HEAD
+
         
         <div class="form-group row">
             <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Name') }}</label>
@@ -74,9 +74,7 @@
                             </div>
                         </div>
          
-=======
-       
->>>>>>> 654924f1a93421959999c92ca92cf1b585ccec7c
+
         
         <div class="form-group text-right">
                 <button type="submit" class="btn btn-success" name="ok">Save</button>

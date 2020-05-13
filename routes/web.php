@@ -47,13 +47,13 @@ Route::delete('movimento/{movimento}', 'MovimentoController@destroy')->name('mov
 
 //User
 Route::get('definicoes/edit', 'DefinicaoController@edit')->name('definicoes.edit');
-<<<<<<< HEAD
+
 Route::put('user/{user}', 'UserController@update')->name('user.update');
-=======
+
 Route::put('definicoes/{user}', 'DefinicaoController@update')->name('definicoes.update');
 Route::get('definicoes/{user}', 'DefinicaoController@apagar')->name('definicoes.apagar');
 Route::delete('definicoes/{user}', 'DefinicaoController@destroy')->name('definicoes.destroy');
->>>>>>> 654924f1a93421959999c92ca92cf1b585ccec7c
+
 Route::get('utilizadores', 'UserController@index')->name('utilizadores.index')->middleware('auth');
 Route::get('utilizadores/view/{id}', 'UserController@viewProfile')->name('utilizadores.view');
 Route::put('utilizadores/view/{id}', 'UserController@guardarTipo')->name('utilizadores.view.update.adm');

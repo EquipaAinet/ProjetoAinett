@@ -3,12 +3,10 @@
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\User;
-<<<<<<< HEAD
+
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
-=======
-use Illuminate\Http\Request;
->>>>>>> 654924f1a93421959999c92ca92cf1b585ccec7c
+
 
 class UserController extends Controller
 {
@@ -28,7 +26,7 @@ class UserController extends Controller
         return view('utilizadores.view')->withUser($user);
     }
 
-<<<<<<< HEAD
+
    
     public function update(Request $request,User $user) 
     {
@@ -78,7 +76,7 @@ class UserController extends Controller
 
 
     
-=======
+
     public function guardarTipo(Request $request, $id){
         $user = User::findOrFail($id);
         $adm = $request->adm ?? 0;
@@ -92,7 +90,7 @@ class UserController extends Controller
             ->with('alert-msg', 'Utilizador alterado com sucesso!')
             ->with('alert-type', 'success');
     }
->>>>>>> 654924f1a93421959999c92ca92cf1b585ccec7c
+
 }
 /*'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
