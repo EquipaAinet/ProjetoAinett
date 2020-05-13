@@ -47,7 +47,7 @@ Route::delete('movimento/{movimento}', 'MovimentoController@destroy')->name('mov
 
 //User
 Route::get('definicoes/edit', 'DefinicaoController@edit')->name('definicoes.edit');
-Route::put('definicoes/{user}', 'DefinicaoController@update')->name('definicoes.update');
+Route::put('user/{user}', 'UserController@update')->name('user.update');
 Route::get('utilizadores', 'UserController@index')->name('utilizadores.index')->middleware('auth');
 Route::get('utilizadores/view/{id}', 'UserController@viewProfile')->name('utilizadores.view');
 

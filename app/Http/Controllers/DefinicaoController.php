@@ -21,14 +21,6 @@ class DefinicaoController extends Controller
        
         return view('definicoes.edit')->with('user',Auth::User());
     }
-    public function update(Request $request,User $user) 
-    {
-        $user->fill($request->all());
-        $user->save();
-        return redirect()->route('definicoes.edit')
-            ->with('alert-msg', 'Conta "' . $user->nome . '" foi alterada com sucesso!')
-            ->with('alert-type', 'success');
-       
-    }
+    
    
 }
