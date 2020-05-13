@@ -52,6 +52,9 @@ Route::get('definicoes/{user}', 'DefinicaoController@apagar')->name('definicoes.
 Route::delete('definicoes/{user}', 'DefinicaoController@destroy')->name('definicoes.destroy');
 Route::get('utilizadores', 'UserController@index')->name('utilizadores.index')->middleware('auth');
 Route::get('utilizadores/view/{id}', 'UserController@viewProfile')->name('utilizadores.view');
+Route::put('utilizadores/view/{id}', 'UserController@guardarTipo')->name('utilizadores.view.update.adm');
+
+
 
 //Route::get('menu', function(){
 //    return view('layout');
