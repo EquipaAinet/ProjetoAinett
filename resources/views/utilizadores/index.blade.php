@@ -2,16 +2,19 @@
 @section('title','Lista de Utilizadores' )
 @section('content')
 
-
-
+    <form method="GET" action="{{route('utilizadores.index')}}" class="form-group">
+        <div class="input-group">
+            <input type="text" class="form-control" name="filtro" placeholder="Pesquisar utilizadores por nome ou email">
+            <div class="input-group-append">
+                <button class="btn btn-outline-secondary" type="submit">Procurar <i class="fas fa-fw fa-search"></i></button>
+            </div>
+        </div>
+    </form>
 
     <table class="table">
     <tr>
-
         <th>Nome</th>
         <th>Email</th>
-
-
     </tr>
         @foreach ($listaUtilizadores as $user)
                 <tr>

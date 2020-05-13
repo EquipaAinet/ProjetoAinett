@@ -35,18 +35,22 @@ class MovimentoController extends Controller
         $movimento = new Movimento;
         $contaId = $conta->id;
         //dd($newMovimento);
-        return view('movimentos.create', compact('contaId'))
+        return view('movimentos.create', compact('conta'))
             ->withMovimento($movimento);
     }
 
-    public function store(Request $request, $contaId)
+    public function store(Request $request, Conta $conta)
     {
-        $movimento = Movimento::create();
-        dd($movimento);
-        $movimento->conta_id = $contaId;
-        $movimento->data =$request->data;
-        $movimento->valor = $request->valor;
-        $movimento->tipo = $request->tipo;
+        //dd($conta);
+        $movimento =  Movimento::create([
+            'conta_id' => $conta->id,
+            'data' => $request->data,
+            'valor' => $request->valor,
+            'saldo_inicial' => $conta->saldo_abertura,
+            'saldo_final' => $conta->saldo_atual,
+            'tipo' => $request->tipo,
+        ]);
+        //dd($movimento);
         return redirect()->route('conta.index')
             ->with('alert-msg', 'O Movimento "' . $movimento->id . '" foi criado com sucesso!')
             ->with('alert-type', 'success');
