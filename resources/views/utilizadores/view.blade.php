@@ -16,7 +16,7 @@
         <a href="#" class="btn btn-success" role="button" aria-pressed="true" data-toggle="modal" data-target="#alterarModal" >Alterar</a>
     @endif
 
-    <a href="{{ route('utilizadores.index') }}" class="btn btn-secondary">Voltar</a>
+    <a href="{{ url()->previous() }}" class="btn btn-secondary">Voltar</a>
 
     <!-- Logout Modal-->
     <div class="modal fade" id="alterarModal" tabindex="-1" role="dialog" aria-labelledby="Alterar tipo de utilizador" aria-hidden="true">

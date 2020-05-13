@@ -7,9 +7,11 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $listaUtilizadores = User::paginate(10);
+        $filtro = $request->filtro ?? '';
+
+        $listaUtilizadores = User::where('name','LIKE','%'.$filtro.'%')->orWhere('email','LIKE','%'.$filtro.'%')->paginate(10);
 
         return view('utilizadores.index')->withListaUtilizadores($listaUtilizadores);
     }

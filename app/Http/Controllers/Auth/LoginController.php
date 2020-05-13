@@ -43,9 +43,7 @@ class LoginController extends Controller
     protected function authenticated(Request $request, $user){
 
         if($user->bloqueado == 1){
-            //logout manual
             Auth::logout();
-
             //pesquisar block do user na autenticação
 
             return redirect()->route('pages.index')
