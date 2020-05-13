@@ -38,7 +38,7 @@ Route::delete('conta/{conta}', 'ContaController@destroy')->name('conta.destroy')
 //Movimentos
 Route::get('movimento/{movimento}/edit', 'MovimentoController@edit')->name('movimentos.edit');
 Route::put('movimento/{movimento}', 'MovimentoController@update')->name('movimentos.update');
-Route::post('movimento/{contaId}', 'MovimentoController@store')->name('movimentos.store');
+Route::post('movimento/{conta}', 'MovimentoController@store')->name('movimentos.store');
 Route::get('movimento/{conta}/create', 'MovimentoController@create')->name('movimentos.create');
 Route::delete('movimento/{movimento}', 'MovimentoController@destroy')->name('movimentos.destroy');
 
@@ -48,6 +48,8 @@ Route::delete('movimento/{movimento}', 'MovimentoController@destroy')->name('mov
 //User
 Route::get('definicoes/edit', 'DefinicaoController@edit')->name('definicoes.edit');
 Route::put('definicoes/{user}', 'DefinicaoController@update')->name('definicoes.update');
+Route::get('definicoes/{user}', 'DefinicaoController@apagar')->name('definicoes.apagar');
+Route::delete('definicoes/{user}', 'DefinicaoController@destroy')->name('definicoes.destroy');
 Route::get('utilizadores', 'UserController@index')->name('utilizadores.index')->middleware('auth');
 Route::get('utilizadores/view/{id}', 'UserController@viewProfile')->name('utilizadores.view');
 Route::put('utilizadores/view/{id}', 'UserController@guardarTipo')->name('utilizadores.view.update.adm');

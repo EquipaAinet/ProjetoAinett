@@ -9,6 +9,10 @@
         <a href="{{route('definicoes.edit')}}">Editar Perfil</a>
     </li>
 
+    <li>
+        <a href="{{route('definicoes.apagar', ['user' => $user])}}">Apagar Perfil</a>
+    </li>
+
 
 </ul>
 
