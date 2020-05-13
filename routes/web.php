@@ -50,6 +50,9 @@ Route::get('definicoes/edit', 'DefinicaoController@edit')->name('definicoes.edit
 Route::put('definicoes/{user}', 'DefinicaoController@update')->name('definicoes.update');
 Route::get('utilizadores', 'UserController@index')->name('utilizadores.index')->middleware('auth');
 Route::get('utilizadores/view/{id}', 'UserController@viewProfile')->name('utilizadores.view');
+Route::put('utilizadores/view/{id}', 'UserController@guardarTipo')->name('utilizadores.view.update.adm');
+
+
 
 //Route::get('menu', function(){
 //    return view('layout');
