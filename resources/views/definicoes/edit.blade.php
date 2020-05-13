@@ -4,7 +4,6 @@
     <form method="POST" action="#" class="multipart/form-data">
         @csrf
         @method('PUT')
-        <h1>{{$user->name}}</h1>
        
         
         <div class="form-group text-right">
