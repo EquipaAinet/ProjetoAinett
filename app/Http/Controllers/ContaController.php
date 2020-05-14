@@ -68,7 +68,37 @@ class ContaController extends Controller
 
     public function update(Request $request, Conta $conta)
     {
-        $conta->fill($request->all());
+        $userId=Auth::id();
+        if($request->nome == $conta->nome)
+        {
+            $validated_data = $request->validate([
+                'descricao' =>              'nullable|string|max:255',
+                'saldo_abertura' =>         'required|numeric',
+                'saldo_atual' =>            'required|numeric',
+                'deleted_at' =>             'nullable|timestamp',
+            ], [
+                //error messages
+                'nome.required' => '"Nome" is required.',
+                'saldo_abertura' => '"Saldo Abertura" is required.',
+                'saldo_atual' => '"Saldo atual" is required.',
+            ]);
+        }
+        //$conta->fill($request->all());
+        else {
+        $validated_data = $request->validate([
+            'nome' => Rule::unique('contas')->where('user_id',$userId),
+            'descricao' =>              'nullable|string|max:255',
+            'saldo_abertura' =>         'required|numeric',
+            'saldo_atual' =>            'required|numeric',
+            'deleted_at' =>             'nullable|timestamp',
+        ], [
+            //error messages
+            'nome.required' => '"Nome" is required.',
+            'saldo_abertura' => '"Saldo Abertura" is required.',
+            'saldo_atual' => '"Saldo atual" is required.',
+        ]);
+        }
+        $conta->fill($validated_data);
         $conta->save();
         return redirect()->route('conta.index')
             ->with('alert-msg', 'Conta "' . $conta->nome . '" foi alterada com sucesso!')
