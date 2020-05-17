@@ -22,11 +22,3 @@
         <div class="small text-danger">{{$message}}</div>
     @enderror
 </div>
-
-<div class="form-group">
-    <label for="inputSaldoAt">Saldo Atual</label>
-    <input type="text" class="form-control" name="saldo_atual" id="inputSaldoAt" value="{{old('saldo_atual', $conta->saldo_atual)}}">
-    @error('SaldoAt')
-        <div class="small text-danger">{{$message}}</div>
-    @enderror
-</div>

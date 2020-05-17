@@ -22,3 +22,26 @@
         <div class="small text-danger">{{$message}}</div>
     @enderror
 </div>
+
+
+<div class="form-group">
+<label for="inputCategoria">Categorias</label>
+<select class="form-control" name="categoria_id" id="inputCategorias">
+@foreach($categorias as $cat)
+    <option value="{{$cat->id}}" selected="">{{$cat->id}} - {{$cat->nome}}</option>
+@endforeach
+</select>
+@error('categoria_id')
+<div class="small text-danger">{{$message}}</div>
+    @enderror
+</div>
+
+
+<div class="form-group">
+    <label for="inputDesc">Descrição</label>
+    <input type="text" class="form-control" name="descricao" id="inputDesc" value="{{old('descricao', $movimento->descricao)}}">
+    @error('descricao')
+        <div class="small text-danger">{{$message}}</div>
+    @enderror
+</div>
+

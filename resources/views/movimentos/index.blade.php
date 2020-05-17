@@ -39,6 +39,8 @@
         
 
 </table>
+
+
 {{$movimentos->links()}}    
        
        
