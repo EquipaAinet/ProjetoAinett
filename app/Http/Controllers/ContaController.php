@@ -42,7 +42,10 @@ class ContaController extends Controller
               //   Rule::unique('')->ignore($user->id),
             //],
             //'nome' =>                  'required|unique:contas,nome|string|max:20' .$user->id,
-            'nome' => Rule::unique('contas')->where('user_id',$userId),
+            'nome' => [
+                'required','string','max:20',
+                Rule::unique('contas')->where('user_id',$userId),
+            ],
             'descricao' =>              'nullable|string|max:255',
             'saldo_abertura' =>         'required|numeric',
             'saldo_atual' =>            'required|numeric',
@@ -50,8 +53,8 @@ class ContaController extends Controller
         ], [
             //error messages
             'nome.required' => '"Nome" is required.',
-            'saldo_abertura' => '"Saldo Abertura" is required.',
-            'saldo_atual' => '"Saldo atual" is required.',
+            'saldo_abertura.required' => '"Saldo Abertura" is required.',
+            'saldo_atual.required' => '"Saldo atual" is required.',
         ]);
         $conta=Conta::create([
             'user_id' => Auth::id(),
@@ -78,15 +81,18 @@ class ContaController extends Controller
                 'deleted_at' =>             'nullable|timestamp',
             ], [
                 //error messages
-                'nome.required' => '"Nome" is required.',
-                'saldo_abertura' => '"Saldo Abertura" is required.',
-                'saldo_atual' => '"Saldo atual" is required.',
+                //'nome.required' => '"Nome" is required.',
+                'saldo_abertura.required' => '"Saldo Abertura" is required.',
+                'saldo_atual.required' => '"Saldo atual" is required.',
             ]);
         }
         //$conta->fill($request->all());
         else {
         $validated_data = $request->validate([
-            'nome' => Rule::unique('contas')->where('user_id',$userId),
+            'nome' => [
+                'required','string','max:20',
+                Rule::unique('contas')->where('user_id',$userId),
+            ],
             'descricao' =>              'nullable|string|max:255',
             'saldo_abertura' =>         'required|numeric',
             'saldo_atual' =>            'required|numeric',
@@ -94,8 +100,8 @@ class ContaController extends Controller
         ], [
             //error messages
             'nome.required' => '"Nome" is required.',
-            'saldo_abertura' => '"Saldo Abertura" is required.',
-            'saldo_atual' => '"Saldo atual" is required.',
+            'saldo_abertura.required' => '"Saldo Abertura" is required.',
+            'saldo_atual.required' => '"Saldo atual" is required.',
         ]);
         }
         $conta->fill($validated_data);
