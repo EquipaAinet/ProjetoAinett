@@ -18,10 +18,14 @@ class MovimentoController extends Controller
 
     public function edit(Movimento $movimento)
     {
-        $categorias = Categoria::all();
-        return view('movimentos.edit')
-            ->withMovimento($movimento)
-            ->withCategorias($categorias);
+        $categoria_tipoR = Categoria::where('tipo','R')->get();
+        //dd($categoria_tipoR);
+        $categoria_tipoD = Categoria::where('tipo', 'D')->get();
+
+        //$categorias = Categoria::all();
+        return view('movimentos.edit', compact('categoria_tipoR', 'categoria_tipoD'))
+            ->withMovimento($movimento);
+            //->withCategorias($categorias);
     }
 
     public function update(Request $request, Movimento $movimento)
@@ -32,7 +36,7 @@ class MovimentoController extends Controller
                 'data' =>                   'required',
                 'valor' =>                  'required|numeric|min:0',
                 'tipo' =>                   'required|in:R,D',
-                'categoria_id' =>           'nullable|numeric|between:1,12',
+                'categoria_id' =>           'nullable|numeric',
                 'descricao' =>              'nullable|string',
                 'deleted_at' =>             'nullable|timestamp',
             ]);
@@ -45,7 +49,7 @@ class MovimentoController extends Controller
             'data' =>                   'required',
             'valor' =>                  'required|numeric|min:0',
             'tipo' =>                   'required|in:R,D',
-            'categoria_id' =>           'nullable|numeric|between:13,43',
+            'categoria_id' =>           'nullable|numeric',
             'descricao' =>              'nullable|string',
             'deleted_at' =>             'nullable|timestamp',
         ], [
@@ -164,4 +168,5 @@ class MovimentoController extends Controller
             ->with('alert-msg', 'O Movimento "' . $movimento->id . '" foi removido com sucesso!')
             ->with('alert-type', 'success');
     }
+
 }

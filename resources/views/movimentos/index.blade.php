@@ -25,7 +25,14 @@
                 <td>{{$mov->valor}}€</td>
                 <td>{{$mov->saldo_inicial}}€</td>
                 <td>{{$mov->saldo_final}}€</td>
-                <td>{{$mov->tipo}}</td>
+                <td>
+                    @if ($mov->tipo == 'R')
+                        Receita
+                    @endif
+                    @if ($mov->tipo == 'D')
+                        Despesa
+                    @endif
+                </td>
                 <td><a href="{{route('movimentos.edit', ['movimento' => $mov])}}" class="btn btn-primary btn-sm" role="button" aria-pressed="true">Alterar</a></td>
                     <td>
                         <form action="{{route('movimentos.destroy',['movimento' => $mov])}}" method="POST">

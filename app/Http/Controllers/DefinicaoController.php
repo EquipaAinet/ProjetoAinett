@@ -42,11 +42,14 @@ class DefinicaoController extends Controller
     {
         $pass = $request->input('password');
         $hashedPassword = $user->password;
+        
+
+        $movimentos=Movimento::where('user_id',$userId)->get();
 
         if (Hash::check($pass, $hashedPassword)) 
         {
             // Password correta
-            User::destroy($user);
+            $user->delete();
             Auth::logout(); 
             return redirect()->route('pages.index')
                 ->with('alert-msg', 'User "' . $user->name . '" foi removido com sucesso!')
