@@ -34,7 +34,7 @@ class MovimentoController extends Controller
                 'tipo' =>                   'required|in:R,D',
                 'categoria_id' =>           'nullable|numeric|between:1,12',
                 'descricao' =>              'nullable|string',
-                'deleted_at' =>             'nullable|timestamp',
+                //'deleted_at' =>             'nullable|timestamp',
             ]);
         }
 

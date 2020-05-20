@@ -4,8 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Definicao;
 use App\User;
+use App\Conta;
+
+use App\Movimento;
+
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+
 
 use Illuminate\Http\Request;
 
@@ -43,10 +50,36 @@ class DefinicaoController extends Controller
         $pass = $request->input('password');
         $hashedPassword = $user->password;
 
-        if (Hash::check($pass, $hashedPassword)) 
+        if (Hash::check($pass, $hashedPassword)) // Password correta
         {
-            // Password correta
-            User::destroy($user);
+            
+           
+            $contas = Conta::where('user_id', $user->id)->get();
+            
+            //movimetnos
+            foreach($contas as $conta){
+              Movimento::where('conta_id',$conta->id)->delete();
+                //autorizacoes das contas(onde user id e o proprio)
+                DB::table('autorizacoes_contas')->where('conta_id',$conta->id)->delete();
+            }
+            
+            
+            
+            //autorizacoes das contas(onde conta id in lista da contas)
+            DB::table('autorizacoes_contas')->where('user_id',$user->id)->delete();
+            
+            //apagar contas
+            Conta::where('user_id',$user->id)->delete();
+
+           
+            //apagar foto
+            if($user->foto!=0){
+            Storage::delete('/public/fotos/'.$user->foto);
+            }
+
+           
+           //apagar user
+            $user->delete();
             Auth::logout(); 
             return redirect()->route('pages.index')
                 ->with('alert-msg', 'User "' . $user->name . '" foi removido com sucesso!')
