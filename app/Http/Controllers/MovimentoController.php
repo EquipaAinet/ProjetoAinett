@@ -6,6 +6,7 @@ use App\Conta;
 use App\Categoria;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class MovimentoController extends Controller
 {
@@ -163,9 +164,12 @@ class MovimentoController extends Controller
 
     public function destroy(Movimento $movimento)
     {
-        Movimento::destroy($movimento);
+       
+       
+        $movimento->delete();
+       
         return redirect()->route('conta.index')
-            ->with('alert-msg', 'O Movimento "' . $movimento->id . '" foi removido com sucesso!')
+            ->with('alert-msg', 'O Movimento foi removido com sucesso!')
             ->with('alert-type', 'success');
     }
 

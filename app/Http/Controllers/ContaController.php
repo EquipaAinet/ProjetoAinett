@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Movimento;
 
 
 use App\Conta;
@@ -109,10 +111,12 @@ class ContaController extends Controller
     }
 
     public function destroy(Conta $conta)
-    {
-        Conta::destroy($conta);
+    {   
+        $movimentos = Movimento::where('conta_id',$conta->id)->delete();
+        
+        $conta->delete();
         return redirect()->route('conta.index')
-            ->with('alert-msg', 'Conta "' . $conta->nome . '" foi removida com sucesso!')
+            ->with('alert-msg', 'Conta foi removida com sucesso!')
             ->with('alert-type', 'success');
     }
 
