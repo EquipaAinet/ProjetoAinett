@@ -49,7 +49,6 @@ class ContaController extends Controller
             'descricao' =>              'nullable|string|max:255',
             'saldo_abertura' =>         'required|numeric',
             'saldo_atual' =>            'required|numeric',
-            'deleted_at' =>             'nullable|timestamp',
         ], [
             //error messages
             'nome.required' => '"Nome" is required.',
@@ -78,7 +77,6 @@ class ContaController extends Controller
                 'descricao' =>              'nullable|string|max:255',
                 'saldo_abertura' =>         'required|numeric',
                 'saldo_atual' =>            'required|numeric',
-                'deleted_at' =>             'nullable|timestamp',
             ], [
                 //error messages
                 //'nome.required' => '"Nome" is required.',
@@ -96,7 +94,6 @@ class ContaController extends Controller
             'descricao' =>              'nullable|string|max:255',
             'saldo_abertura' =>         'required|numeric',
             'saldo_atual' =>            'required|numeric',
-            'deleted_at' =>             'nullable|timestamp',
         ], [
             //error messages
             'nome.required' => '"Nome" is required.',

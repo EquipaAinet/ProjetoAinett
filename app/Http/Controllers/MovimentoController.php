@@ -38,7 +38,6 @@ class MovimentoController extends Controller
                 'tipo' =>                   'required|in:R,D',
                 'categoria_id' =>           'nullable|numeric',
                 'descricao' =>              'nullable|string',
-                //'deleted_at' =>             'nullable|timestamp',
             ]);
         }
 
@@ -51,7 +50,6 @@ class MovimentoController extends Controller
             'tipo' =>                   'required|in:R,D',
             'categoria_id' =>           'nullable|numeric',
             'descricao' =>              'nullable|string',
-            'deleted_at' =>             'nullable|timestamp',
         ], [
     
             //error messages
@@ -89,11 +87,15 @@ class MovimentoController extends Controller
     {
         $movimento = new Movimento;
         $contaId = $conta->id;
-        $categorias = Categoria::all();
+        $categoria_tipoR = Categoria::where('tipo','R')->get();
+        //dd($categoria_tipoR);
+        $categoria_tipoD = Categoria::where('tipo', 'D')->get();
+
+        //$categorias = Categoria::all();
         //dd($newMovimento);
-        return view('movimentos.create', compact('conta'))
-            ->withMovimento($movimento)
-            ->withCategorias($categorias);
+        return view('movimentos.create', compact('conta', 'categoria_tipoR', 'categoria_tipoD'))
+            ->withMovimento($movimento);
+            //->withCategorias($categorias);
     }
 
     public function store(Request $request, Conta $conta)
@@ -104,9 +106,8 @@ class MovimentoController extends Controller
                 'data' =>                   'required',
                 'valor' =>                  'required|numeric|min:0',
                 'tipo' =>                   'required|in:R,D',
-                'categoria_id' =>           'nullable|numeric|between:1,12',
+                'categoria_id' =>           'nullable|numeric',
                 'descricao' =>              'nullable|string',
-                'deleted_at' =>             'nullable|timestamp',
             ]);
         }
 
@@ -117,9 +118,8 @@ class MovimentoController extends Controller
             'data' =>                   'required',
             'valor' =>                  'required|numeric|min:0',
             'tipo' =>                   'required|in:R,D',
-            'categoria_id' =>           'nullable|numeric|between:13,43',
+            'categoria_id' =>           'nullable|numeric',
             'descricao' =>              'nullable|string',
-            'deleted_at' =>             'nullable|timestamp',
         ], [
     
             //error messages
