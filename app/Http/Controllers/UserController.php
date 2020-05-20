@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth;
 
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Storage;
 
 
 
@@ -34,15 +35,16 @@ class UserController extends Controller
     public function update(Request $request,User $user) 
     {
         
-        //Validar
-        if (!(\Hash::check($request->current_password,$user->password))) {
-            // The passwords matches
-            //return redirect()->back()->with("error","Your current password does not matches with the password you provided. Please try again.");
-            return redirect()->route('definicoes.edit')
-                ->with('alert-msg', 'Password não está correta!')
-                ->with('alert-type', 'danger');
+        //validar password
+        if($request->current_password!=0){
+            if (!(\Hash::check($request->current_password,$user->password))) {
+                // The passwords matches
+                //return redirect()->back()->with("error","Your current password does not matches with the password you provided. Please try again.");
+                return redirect()->route('definicoes.edit')
+                    ->with('alert-msg', 'Password não está correta!')
+                    ->with('alert-type', 'danger');
+                }
         }
-
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             
@@ -51,7 +53,7 @@ class UserController extends Controller
                 Rule::unique('users')->ignore($user->id),
             ],
             'NIF' => 'nullable|digits:9',
-            'telefone' => 'nullable|max:12|min:9',
+            'telefone' => 'nullable',
             'foto' =>'nullable|image|max:8192',
             'current_password' => 'nullable|string|required_with:new_password,new_password_confirmation',
             'new_password' => 'nullable|required_with:current_password,new_password_confirmation|string|different:current_password',
@@ -61,6 +63,8 @@ class UserController extends Controller
         //Foto
         $urlFoto = null;
         if($request->hasFile('foto')){
+            
+            Storage::delete('/public/fotos/'.$user->foto);
             
             $path = $request->foto->store('public/fotos');
             $urlFoto = basename($path);
