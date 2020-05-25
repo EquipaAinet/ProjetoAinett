@@ -7,7 +7,11 @@
     <div class="col-3">
         <a  href="{{route('conta.create')}}" class="btn btn-success" role="button" aria-pressed="true">Nova Conta</a>
     </div>
+    <div class="col-3">
+        <a  href="{{route('conta.recover')}}" class="btn btn-success" role="button" aria-pressed="true">Recuperar Conta</a>
+    </div>
 </div>
+
        
 
 <table class="table">

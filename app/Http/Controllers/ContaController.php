@@ -119,6 +119,16 @@ class ContaController extends Controller
             ->with('alert-msg', 'Conta foi removida com sucesso!')
             ->with('alert-type', 'success');
     }
+    public function recover(Conta $conta)
+    {   
+        $userId=Auth::id();
+       Conta::withTrashed()
+        ->where('user_id',$userId)
+        ->restore();
+        return redirect()->route('conta.index')
+            ->with('alert-msg', 'Conta foi removida com sucesso!')
+            ->with('alert-type', 'success');
+    }
 
 }
 
