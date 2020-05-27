@@ -75,79 +75,56 @@ class MovimentoController extends Controller
 
         //$this->calculaSaldos($conta, $movimento);
 
-    
-        if($movimento->tipo == 'R')
-        {
-            if($validated_data['tipo'] == 'R')
-            {
-            $valorAntigo = $movimento->valor;   
-            $valorAdicionar = $validated_data['valor'] - $valorAntigo;
-            
-            
-            $movimento->saldo_inicial = $movimento->saldo_inicial;
-            $movimento->saldo_final = $movimento->saldo_final + $valorAdicionar;
-            $movimento->fill($validated_data);
-            $movimento->save();
+        $count=0;
+        
 
- 
+        foreach($movimentos as $mov){
+            if($count==0){//primeira posicoa do valor atualizado
+                if($validated_data['tipo']=="R"){
+                    $mov->valor=$validated_data["valor"];
+                    $mov->saldo_final=$mov->saldo_inicial+$validated_data['valor'];
 
-            foreach($movimentos as $mov)
-            {
-
-                $mov->saldo_inicial = $mov->saldo_inicial + $valorAdicionar;
-                $mov->saldo_final = $mov->saldo_final + $valorAdicionar;
-                $mov->save();
-            }
-            }
-            else
-            {
-                $valorAdicionar = -$validated_data['valor'];
-                $movimento->saldo_inicial = $movimento->saldo_inicial;
-                $movimento->saldo_final = $movimento->saldo_inicial - $validated_data['valor'];
-                $movimento->fill($validated_data);
-                $movimento->save();
-
-                $movimentos[0]->saldo_inicial = $movimentos[0]->saldo_inicial;
-                $movimentos[0]->saldo_final = $movimentos[0]->saldo_inicial - $validated_data['valor'];
-                foreach($movimentos as $mov)
-                {
-                    $mov->saldo_inicial = $mov->saldo_inicial - $validated_data['valor'];
-                    $mov->saldo_final = $mov->saldo_final - $validated_data['valor'];
+                   $mov->fill([
+                                'data' => $validated_data['data'],
+                                'tipo' => $validated_data['tipo'],
+                                'descricao' => $validated_data['descricao'],
+                                'categoria_id'=>$validated_data['categoria_id'],
+                            ]);
+                    $mov->save();
+                }else{
+                    $mov->valor=$validated_data["valor"];
+                    $mov->saldo_final=$mov->saldo_inicial-$validated_data['valor']; 
+                    $mov->fill([
+                        'data' => $validated_data['data'],
+                        'tipo' => $validated_data['tipo'],
+                        'descricao' => $validated_data['descricao'],
+                        'categoria_id'=>$validated_data['categoria_id'],
+                    ]);
+                
                     $mov->save();
                 }
-            }
+            }else{//alterar os movimentos para cima do valor atualizado
+                $mov->saldo_inicial=$movimentos[$count-1]->saldo_final;
+               
+                if($mov->tipo=="R"){
+                    $mov->saldo_final=$mov->saldo_inicial+$mov->valor;
+                    $mov->save();
+                }else{
+                    $mov->saldo_final=$mov->saldo_inicial-$mov->valor;
+                    $mov->save();
+                }
 
-        }
-        
-        else
-        {
-            $valorAntigo = $movimento->valor;   
-            $valorAdicionar = $validated_data['valor'] - $valorAntigo;
-            //dd($valorAdicionar);
-            
-            
-            $movimento->saldo_inicial = $movimento->saldo_inicial;
-            $movimento->saldo_final = $movimento->saldo_final - $valorAdicionar;
-            $movimento->fill($validated_data);
-            $movimento->save();
 
- 
-
-            foreach($movimentos as $mov)
-            {
-
-                $mov->saldo_inicial = $movimento->saldo_inicial - $valorAdicionar;
-                $mov->saldo_final = $mov->saldo_final - $valorAdicionar;
-                $mov->save();
-            }
-
+            }   
+            $valor_saldo_atual=$mov->saldo_final;
+            $count++;
         }
 
 
 
 
 
-        $conta->saldo_atual = $conta->saldo_atual + $valorAdicionar;
+        $conta->saldo_atual =$valor_saldo_atual;
         $conta->save();
     
         return redirect()->route('movimento.index', compact('conta'))
