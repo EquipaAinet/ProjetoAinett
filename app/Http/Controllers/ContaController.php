@@ -116,18 +116,35 @@ class ContaController extends Controller
         
         $conta->delete();
         return redirect()->route('conta.index')
-            ->with('alert-msg', 'Conta foi removida com sucesso!')
+            ->with('alert-msg','Conta "' . $conta->nome . '" foi removida com sucesso!')
             ->with('alert-type', 'success');
     }
-    public function recover(Conta $conta)
+    public function recover()
     {   
         $userId=Auth::id();
-       Conta::withTrashed()
+        $contas=Conta::onlyTrashed()
         ->where('user_id',$userId)
+        ->get();
+    
+        return view('conta.recover')
+            ->withContas($contas);
+            
+    }
+    public function recuperar($id)
+    {   
+       
+        Conta::onlyTrashed()
+        ->where('id',$id)
         ->restore();
+        Movimento::withTrashed()
+        ->where('conta_id',$id)
+        ->restore();
+        
         return redirect()->route('conta.index')
-            ->with('alert-msg', 'Conta foi removida com sucesso!')
-            ->with('alert-type', 'success');
+        ->with('alert-msg','Conta foi recuperada com sucesso!')
+        ->with('alert-type', 'success');
+       
+            
     }
 
 }
