@@ -4,16 +4,22 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Conta;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Movimento extends Model
 {
     public $timestamps = false;
 
-    protected $fillable = ['conta_id','data', 'valor', 'saldo_inicial', 'saldo_final', 'tipo'];
+    use SoftDeletes;
+
+    protected $fillable = ['conta_id','data', 'valor', 'saldo_inicial', 'saldo_final', 'tipo', 'categoria_id', 'descricao'];
+
+    protected $dates = ['deleted_at'];
 
     public function conta()
     {
         return $this->belongsTo('App\Conta');
     }
 
+    
 }

@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ContaPost extends FormRequest
+class UserPost extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,11 +24,14 @@ class ContaPost extends FormRequest
     public function rules()
     {
         return [
-            'nome' =>                   'required|string|max:20'
-            'descricao' =>              'nullable|string|max:255',
-            'saldo_abertura' =>         'required|decimal',
-            'saldo_atual' =>            'required|decimal',
-            'deleted_at' =>             'nullable|timestamp',
+            'name' =>                'required|string|max:255',
+            'email' => [
+                'required','email',
+                Rule::unique('users')->ignore($user->id),
+            ],
+            'NIF' => 'nullable|digits:9',
+            'telefone' => 'nullable|max:12|min:9',
+            'foto' =>'nullable|image|max:8192',
         ];
     }
 
