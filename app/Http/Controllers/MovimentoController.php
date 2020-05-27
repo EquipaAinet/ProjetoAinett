@@ -63,26 +63,52 @@ class MovimentoController extends Controller
         //dd($validated_data);
 
         //Atualiza automaticamente saldo final e inicial
-        $conta = Conta::find($movimento->conta_id);
 
+
+        $conta = Conta::find($movimento->conta_id);
+        $movimentos = Movimento::where('conta_id', $conta->id)
+            ->where('data','>=',$movimento->data)
+            ->where('id', '>', $movimento->id)
+            ->get();
+
+        //dd($movimentos);
+    
         if($validated_data['tipo'] == 'R')
         {
+            $movimento->saldo_inicial = $conta->saldo_atual;
+            $movimento->saldo_final = $conta->saldo_atual + $validated_data['valor'];
+            $movimento->fill($validated_data);
+            $movimento->save();
+
+            foreach($movimentos as $mov)
+            {
+                $mov->saldo_inicial = 
+            }
+
             $conta->saldo_atual = $movimento->saldo_inicial + $validated_data['valor'];
             $conta->save();
         }
         else
         {
+            $movimento->saldo_final = $conta->saldo_atual;
+
+            $movimento->fill($validated_data);
+            $movimento->save();
+
+            foreach($movimento as $mov)
+            {
+
+            }
+
             $conta->saldo_atual = $movimento->saldo_inicial - $validated_data['valor'];
             $conta->save();
         }
 
-        $movimento->saldo_final = $conta->saldo_atual;
-
-        $movimento->fill($validated_data);
-        $movimento->save();
-        return redirect()->route('conta.index')
+       
+        return redirect()->route('movimento.index', compact('conta'))
             ->with('alert-msg', 'O Movimento "' . $movimento->id . '" foi alterado com sucesso!')
             ->with('alert-type', 'success');
+
     }
 
     public function create(Conta $conta)
@@ -157,8 +183,9 @@ class MovimentoController extends Controller
             'categoria_id' => $validated_data['categoria_id'],
             'descricao' => $validated_data['descricao'],
         ]);
-        //dd($movimento);
-        return redirect()->route('conta.index')
+        //dd($movimento);7
+        $this->calculaSaldos($conta->id, $movimento);
+        return redirect()->route('movimento.index', compact('conta'))
             ->with('alert-msg', 'O Movimento "' . $movimento->id . '" foi criado com sucesso!')
             ->with('alert-type', 'success');
     }
@@ -173,5 +200,23 @@ class MovimentoController extends Controller
             ->with('alert-msg', 'O Movimento foi removido com sucesso!')
             ->with('alert-type', 'success');
     }
+
+
+    private function calculaSaldos(Conta $conta, Movimento $movimento)
+    {
+        //$ultimoMoviventoValido = query movimentos, conta_id == x, where('data', '<', $movimento->data)
+            //->orderBy('data', 'desc')
+            //orderBy('id', 'desc')
+            //->first() 
+        
+        //$movimentosAlterar = query movimentos, conta_id == x, where('data' , '>', $movimento->data)
+            //->orderBy('data', 'asc')
+            //->orderBy('id', 'asc')
+            //->get()
+
+        //se o ultimo valor valido for nulo, o saldo de referencia é o saldo inicial da conta
+        
+    }
+
 
 }
