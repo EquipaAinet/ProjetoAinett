@@ -50,19 +50,17 @@ class ContaController extends Controller
             ],
             'descricao' =>              'nullable|string|max:255',
             'saldo_abertura' =>         'required|numeric',
-            'saldo_atual' =>            'required|numeric',
         ], [
             //error messages
             'nome.required' => '"Nome" is required.',
             'saldo_abertura.required' => '"Saldo Abertura" is required.',
-            'saldo_atual.required' => '"Saldo atual" is required.',
         ]);
         $conta=Conta::create([
             'user_id' => Auth::id(),
             'nome' => $validated_data['nome'],
             'descricao' => $validated_data['descricao'],
             'saldo_abertura' => $validated_data['saldo_abertura'],
-            'saldo_atual' => $validated_data['saldo_atual'],
+            'saldo_atual' => $validated_data['saldo_abertura'],
         ]);
         //dd($conta); 
         return redirect()->route('conta.index')

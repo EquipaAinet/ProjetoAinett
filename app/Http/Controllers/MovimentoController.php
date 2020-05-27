@@ -68,43 +68,88 @@ class MovimentoController extends Controller
         $conta = Conta::find($movimento->conta_id);
         $movimentos = Movimento::where('conta_id', $conta->id)
             ->where('data','>=',$movimento->data)
-            ->where('id', '>', $movimento->id)
+            ->where('id', '>=', $movimento->id)
             ->get();
 
         //dd($movimentos);
+
+        //$this->calculaSaldos($conta, $movimento);
+
     
-        if($validated_data['tipo'] == 'R')
+        if($movimento->tipo == 'R')
         {
-            $movimento->saldo_inicial = $conta->saldo_atual;
-            $movimento->saldo_final = $conta->saldo_atual + $validated_data['valor'];
+            if($validated_data['tipo'] == 'R')
+            {
+            $valorAntigo = $movimento->valor;   
+            $valorAdicionar = $validated_data['valor'] - $valorAntigo;
+            
+            
+            $movimento->saldo_inicial = $movimento->saldo_inicial;
+            $movimento->saldo_final = $movimento->saldo_final + $valorAdicionar;
             $movimento->fill($validated_data);
             $movimento->save();
+
+ 
 
             foreach($movimentos as $mov)
             {
-                $mov->saldo_inicial = 
+
+                $mov->saldo_inicial = $mov->saldo_inicial + $valorAdicionar;
+                $mov->saldo_final = $mov->saldo_final + $valorAdicionar;
+                $mov->save();
+            }
+            }
+            else
+            {
+                $valorAdicionar = -$validated_data['valor'];
+                $movimento->saldo_inicial = $movimento->saldo_inicial;
+                $movimento->saldo_final = $movimento->saldo_inicial - $validated_data['valor'];
+                $movimento->fill($validated_data);
+                $movimento->save();
+
+                $movimentos[0]->saldo_inicial = $movimentos[0]->saldo_inicial;
+                $movimentos[0]->saldo_final = $movimentos[0]->saldo_inicial - $validated_data['valor'];
+                foreach($movimentos as $mov)
+                {
+                    $mov->saldo_inicial = $mov->saldo_inicial - $validated_data['valor'];
+                    $mov->saldo_final = $mov->saldo_final - $validated_data['valor'];
+                    $mov->save();
+                }
             }
 
-            $conta->saldo_atual = $movimento->saldo_inicial + $validated_data['valor'];
-            $conta->save();
         }
+        
         else
         {
-            $movimento->saldo_final = $conta->saldo_atual;
-
+            $valorAntigo = $movimento->valor;   
+            $valorAdicionar = $validated_data['valor'] - $valorAntigo;
+            //dd($valorAdicionar);
+            
+            
+            $movimento->saldo_inicial = $movimento->saldo_inicial;
+            $movimento->saldo_final = $movimento->saldo_final - $valorAdicionar;
             $movimento->fill($validated_data);
             $movimento->save();
 
-            foreach($movimento as $mov)
+ 
+
+            foreach($movimentos as $mov)
             {
 
+                $mov->saldo_inicial = $movimento->saldo_inicial - $valorAdicionar;
+                $mov->saldo_final = $mov->saldo_final - $valorAdicionar;
+                $mov->save();
             }
 
-            $conta->saldo_atual = $movimento->saldo_inicial - $validated_data['valor'];
-            $conta->save();
         }
 
-       
+
+
+
+
+        $conta->saldo_atual = $conta->saldo_atual + $valorAdicionar;
+        $conta->save();
+    
         return redirect()->route('movimento.index', compact('conta'))
             ->with('alert-msg', 'O Movimento "' . $movimento->id . '" foi alterado com sucesso!')
             ->with('alert-type', 'success');
@@ -184,7 +229,7 @@ class MovimentoController extends Controller
             'descricao' => $validated_data['descricao'],
         ]);
         //dd($movimento);7
-        $this->calculaSaldos($conta->id, $movimento);
+        //$this->calculaSaldos($conta->id, $movimento);
         return redirect()->route('movimento.index', compact('conta'))
             ->with('alert-msg', 'O Movimento "' . $movimento->id . '" foi criado com sucesso!')
             ->with('alert-type', 'success');
@@ -215,6 +260,8 @@ class MovimentoController extends Controller
             //->get()
 
         //se o ultimo valor valido for nulo, o saldo de referencia é o saldo inicial da conta
+        
+        
         
     }
 
