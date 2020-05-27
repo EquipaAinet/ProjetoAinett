@@ -28,7 +28,7 @@
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
-                <form action="{{route('utilizadores.view.update.adm', ['id' => $user->id]) }}" method="POST" class="form-group">
+                <form action="{{route('utilizadores.view.update.type', ['id' => $user->id]) }}" method="POST" class="form-group">
                     @csrf
                     @method('PUT')
                     <div class="modal-body">
