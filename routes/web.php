@@ -51,8 +51,8 @@ Route::put('definicoes/{user}', 'DefinicaoController@update')->name('definicoes.
 Route::get('definicoes/{user}', 'DefinicaoController@apagar')->name('definicoes.apagar');
 Route::delete('definicoes/{user}', 'DefinicaoController@destroy')->name('definicoes.destroy');
 Route::get('utilizadores', 'UserController@index')->name('utilizadores.index')->middleware('auth');
-Route::get('utilizadores/view/{id}', 'UserController@viewProfile')->name('utilizadores.view');
-Route::put('utilizadores/view/{id}', 'UserController@guardarTipo')->name('utilizadores.view.update.adm');
+Route::get('utilizadores/view/{id}', 'UserController@viewProfile')->name('utilizadores.view')->middleware('auth');
+Route::put('utilizadores/view/{id}', 'UserController@guardarTipo')->name('utilizadores.view.update.type')->middleware('auth');
 
 
 
