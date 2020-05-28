@@ -141,11 +141,12 @@ class ContaController extends Controller
         ->where('conta_id',$id)
         ->restore();
 
+        $conta=Conta::where('id',$id)
+        ->get();
         
-       
         
-        return redirect()->route('conta.index')
-        ->with('alert-msg','Conta'.$conta->nome.' foi recuperada com sucesso!')
+       return redirect()->route('conta.index')
+        ->with('alert-msg','Conta foi recuperada com sucesso!')
         ->with('alert-type', 'success');
        
             

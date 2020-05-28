@@ -64,7 +64,7 @@ class MovimentoController extends Controller
 
         //Atualiza automaticamente saldo final e inicial
 
-
+        /*
         $conta = Conta::find($movimento->conta_id);
         $movimentos = Movimento::where('conta_id', $conta->id)
             ->where('data','>=',$movimento->data)
@@ -73,8 +73,8 @@ class MovimentoController extends Controller
 
         //dd($movimentos);
 
-        //$this->calculaSaldos($conta, $movimento);
-
+        
+        
         $count=0;
         
 
@@ -118,14 +118,44 @@ class MovimentoController extends Controller
             }   
             $valor_saldo_atual=$mov->saldo_final;
             $count++;
+        }*/
+        $conta = Conta::find($movimento->conta_id);
+        $movimento->fill([
+            'valor'=> $validated_data['valor'],
+            'data' => $validated_data['data'],
+            'tipo' => $validated_data['tipo'],
+            'descricao' => $validated_data['descricao'],
+            'categoria_id'=>$validated_data['categoria_id'],
+        ]);
+        $movimento->save();
+
+
+
+        $movimentoAntesDoAlterar = Movimento::where('conta_id', $conta->id)
+        ->where('data','<=',$movimento->data)
+        ->where('id','!=',$movimento->id)
+        ->orderBy('data','DESC')
+        ->first();
+       
+        
+        //se tiver algum movimento antes do criado
+        if($movimentoAntesDoAlterar!=null){
+            $movimento->saldo_inicial=$movimentoAntesDoAlterar->saldo_final;
+            $movimento->save();
+           
+            $this->calculaSaldos($conta, $movimento);
+        }else{//se nao tiver movimento anterior ao criado
+            $movimento->saldo_inicial=$conta->saldo_abertura;
+            $movimento->save();
+            $this->calculaSaldos($conta, $movimento);
         }
 
 
 
 
 
-        $conta->saldo_atual =$valor_saldo_atual;
-        $conta->save();
+       /* $conta->saldo_atual =$valor_saldo_atual;
+        $conta->save();*/
     
         return redirect()->route('movimento.index', compact('conta'))
             ->with('alert-msg', 'O Movimento com a data "' . $movimento->data . '" foi alterado com sucesso!')
@@ -180,7 +210,7 @@ class MovimentoController extends Controller
     }
 
         //dd($validated_data);
-
+        
         //Atualiza automaticamente saldo final e inicial
         if($validated_data['tipo'] == 'R')
         {
@@ -205,8 +235,26 @@ class MovimentoController extends Controller
             'categoria_id' => $validated_data['categoria_id'],
             'descricao' => $validated_data['descricao'],
         ]);
-        //dd($movimento);7
-        //$this->calculaSaldos($conta->id, $movimento);
+
+        $movimentoAntesDoAlterar = Movimento::where('conta_id', $conta->id)
+        ->where('data','<',$movimento->data)
+        ->where('id', '<', $movimento->id)
+        ->orderBy('id','DESC')
+        ->first();
+        
+        //se tiver algum movimento antes do criado
+        if($movimentoAntesDoAlterar!=null){
+            $movimento->saldo_inicial=$movimentoAntesDoAlterar->saldo_final;
+            $movimento->save();
+           
+            $this->calculaSaldos($conta, $movimento);
+        }else{//se nao tiver movimento anterior ao criado
+            $movimento->saldo_inicial=$conta->saldo_abertura;
+            $movimento->save();
+            $this->calculaSaldos($conta, $movimento);
+        }
+        
+       
         return redirect()->route('movimento.index', compact('conta'))
             ->with('alert-msg', 'O Movimento com data "' . $movimento->data . '" foi criado com sucesso!')
             ->with('alert-type', 'success');
@@ -226,19 +274,56 @@ class MovimentoController extends Controller
 
     private function calculaSaldos(Conta $conta, Movimento $movimento)
     {
-        //$ultimoMoviventoValido = query movimentos, conta_id == x, where('data', '<', $movimento->data)
-            //->orderBy('data', 'desc')
-            //orderBy('id', 'desc')
-            //->first() 
         
-        //$movimentosAlterar = query movimentos, conta_id == x, where('data' , '>', $movimento->data)
-            //->orderBy('data', 'asc')
-            //->orderBy('id', 'asc')
-            //->get()
+        //buscar valores acima por ordem de id e data em tabela
+        $movimentos = Movimento::where('conta_id', $conta->id)
+        ->where('data','>=',$movimento->data)
+        ->where('id', '<=', $movimento->id)
+        ->get();
+        
 
-        //se o ultimo valor valido for nulo, o saldo de referencia é o saldo inicial da conta
+
+      
+       $count=0;
         
         
+        foreach($movimentos as $mov){
+            if($count==0){//primeira posicoa do valor atualizado
+                if($mov->tipo=="R"){
+                    
+                    $mov->saldo_final=$mov->saldo_inicial+$mov->valor;
+                    $mov->save();
+                    
+                    
+                }else{
+                    
+                    $mov->saldo_final=$mov->saldo_inicial-$mov->valor;
+                    $mov->save();
+                   
+                   
+                }
+            }else{//alterar os movimentos para cima do valor atualizado
+                $mov->saldo_inicial=$movimentos[$count-1]->saldo_final;
+               
+                if($mov->tipo=="R"){
+                    $mov->saldo_final=$movimentos[$count-1]->saldo_final+$mov->valor;
+                    $mov->save();
+                }else{
+                    $mov->saldo_final=$movimentos[$count-1]->saldo_final-$mov->valor;
+                    $mov->save();
+                }
+                
+                
+
+            }   
+            $valor_saldo_atual=$mov->saldo_final;
+            
+            $count++;
+        }
+        $conta->saldo_atual=$valor_saldo_atual;
+        $conta->save();
+        
+
         
     }
 
