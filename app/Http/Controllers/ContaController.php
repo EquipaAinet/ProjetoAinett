@@ -154,20 +154,18 @@ class ContaController extends Controller
     //contar a eliminar
     public function delete($id){
 
-         
+        $conta=Conta::onlyTrashed()
+        ->findOrfail($id);
         
-       /* $Nomeconta=DB::table('contas')
-                ->where('id',$id)
-                ->select('nome')
-                ->get();*/
+
         
         DB::table('autorizacoes_contas')->where('conta_id',$id)->delete();
-        DB::table('movimentos')->where('conta_id',$id)->delete();
-        DB::table('contas')->where('id',$id)->delete();
-        //dd($Nomeconta);
-
+        Movimento::where('conta_id',$id)->forceDelete();
+        Conta::where('id',$id)->forceDelete();
+        
+        
         return redirect()->route('conta.index')
-        ->with('alert-msg','Conta  foi removida com sucesso!')
+        ->with('alert-msg','Conta ' .$conta->nome . ' foi removida com sucesso!')
         ->with('alert-type', 'success');
 
     }

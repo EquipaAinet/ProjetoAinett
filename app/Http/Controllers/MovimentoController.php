@@ -263,7 +263,7 @@ class MovimentoController extends Controller
     public function destroy(Movimento $movimento)
     {
        
-        DB::table('movimentos')->where('id',$movimento->id)->delete();
+        Movimento::where('id',$movimento->id)->forceDelete();
         
        
         return redirect()->route('conta.index')
