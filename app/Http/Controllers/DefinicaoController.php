@@ -35,7 +35,7 @@ class DefinicaoController extends Controller
         $user->fill($request->all());
         $user->save();
         return redirect()->route('definicoes.edit')
-            ->with('alert-msg', 'Conta "' . $user->nome . '" foi alterada com sucesso!')
+            ->with('alert-msg', 'Conta "' . $user->nome . '"  foi alterada com sucesso!')
             ->with('alert-type', 'success');
        
     }
@@ -96,7 +96,7 @@ class DefinicaoController extends Controller
         }
         else
         {
-            return redirect()->route('pages.index')
+            return redirect()->route('definicoes.apagar',compact('user'))
                 ->with('alert-msg', 'Password não está correta!')
                 ->with('alert-type', 'danger');
         }
@@ -104,3 +104,4 @@ class DefinicaoController extends Controller
 
    
 }
+

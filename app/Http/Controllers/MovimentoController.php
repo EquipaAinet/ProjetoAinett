@@ -262,11 +262,11 @@ class MovimentoController extends Controller
 
     public function destroy(Movimento $movimento)
     {
-       
+        $conta=Conta::findOrfail($movimento->conta_id);
         Movimento::where('id',$movimento->id)->forceDelete();
         
        
-        return redirect()->route('conta.index')
+        return redirect()->route('movimento.index', compact('conta'))
             ->with('alert-msg', 'O Movimento foi removido com sucesso!')
             ->with('alert-type', 'success');
     }

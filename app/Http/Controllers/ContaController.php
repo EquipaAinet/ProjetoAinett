@@ -133,6 +133,8 @@ class ContaController extends Controller
     public function recuperar($id)
     {   
        
+
+
         Conta::onlyTrashed()
         ->where('id',$id)
         ->restore();
@@ -141,12 +143,11 @@ class ContaController extends Controller
         ->where('conta_id',$id)
         ->restore();
 
-        $conta=Conta::where('id',$id)
-        ->get();
+        $conta=Conta::findOrfail($id);
         
         
        return redirect()->route('conta.index')
-        ->with('alert-msg','Conta foi recuperada com sucesso!')
+        ->with('alert-msg','Conta '.$conta->nome.' foi recuperada com sucesso!')
         ->with('alert-type', 'success');
        
             
