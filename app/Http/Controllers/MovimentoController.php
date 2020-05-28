@@ -128,7 +128,7 @@ class MovimentoController extends Controller
         $conta->save();
     
         return redirect()->route('movimento.index', compact('conta'))
-            ->with('alert-msg', 'O Movimento "' . $movimento->id . '" foi alterado com sucesso!')
+            ->with('alert-msg', 'O Movimento com a data "' . $movimento->data . '" foi alterado com sucesso!')
             ->with('alert-type', 'success');
 
     }
@@ -208,7 +208,7 @@ class MovimentoController extends Controller
         //dd($movimento);7
         //$this->calculaSaldos($conta->id, $movimento);
         return redirect()->route('movimento.index', compact('conta'))
-            ->with('alert-msg', 'O Movimento "' . $movimento->id . '" foi criado com sucesso!')
+            ->with('alert-msg', 'O Movimento com data "' . $movimento->data . '" foi criado com sucesso!')
             ->with('alert-type', 'success');
     }
 

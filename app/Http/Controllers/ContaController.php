@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 use App\Movimento;
 
 
@@ -76,29 +77,28 @@ class ContaController extends Controller
             $validated_data = $request->validate([
                 'descricao' =>              'nullable|string|max:255',
                 'saldo_abertura' =>         'required|numeric',
-                'saldo_atual' =>            'required|numeric',
+               
             ], [
                 //error messages
                 //'nome.required' => '"Nome" is required.',
                 'saldo_abertura.required' => '"Saldo Abertura" is required.',
-                'saldo_atual.required' => '"Saldo atual" is required.',
+                
             ]);
         }
         //$conta->fill($request->all());
         else {
         $validated_data = $request->validate([
-            'nome' => [
-                'required','string','max:20',
+            'nome' => ['required','string','max:20',
                 Rule::unique('contas')->where('user_id',$userId),
             ],
             'descricao' =>              'nullable|string|max:255',
             'saldo_abertura' =>         'required|numeric',
-            'saldo_atual' =>            'required|numeric',
+           
         ], [
             //error messages
             'nome.required' => '"Nome" is required.',
             'saldo_abertura.required' => '"Saldo Abertura" is required.',
-            'saldo_atual.required' => '"Saldo atual" is required.',
+            
         ]);
         }
         $conta->fill($validated_data);
@@ -107,7 +107,7 @@ class ContaController extends Controller
             ->with('alert-msg', 'Conta "' . $conta->nome . '" foi alterada com sucesso!')
             ->with('alert-type', 'success');
     }
-
+    //soft dete da conta
     public function destroy(Conta $conta)
     {   
         $movimentos = Movimento::where('conta_id',$conta->id)->delete();
@@ -117,6 +117,7 @@ class ContaController extends Controller
             ->with('alert-msg','Conta "' . $conta->nome . '" foi removida com sucesso!')
             ->with('alert-type', 'success');
     }
+    //contas que podem ser recuperadas
     public function recover()
     {   
         $userId=Auth::id();
@@ -128,21 +129,46 @@ class ContaController extends Controller
             ->withContas($contas);
             
     }
+    //conta a recuperar
     public function recuperar($id)
     {   
        
         Conta::onlyTrashed()
         ->where('id',$id)
         ->restore();
+
         Movimento::withTrashed()
         ->where('conta_id',$id)
         ->restore();
+
+        
+       
         
         return redirect()->route('conta.index')
-        ->with('alert-msg','Conta foi recuperada com sucesso!')
+        ->with('alert-msg','Conta'.$conta->nome.' foi recuperada com sucesso!')
         ->with('alert-type', 'success');
        
             
+    }
+    //contar a eliminar
+    public function delete($id){
+
+         
+        
+       /* $Nomeconta=DB::table('contas')
+                ->where('id',$id)
+                ->select('nome')
+                ->get();*/
+        
+        DB::table('autorizacoes_contas')->where('conta_id',$id)->delete();
+        DB::table('movimentos')->where('conta_id',$id)->delete();
+        DB::table('contas')->where('id',$id)->delete();
+        //dd($Nomeconta);
+
+        return redirect()->route('conta.index')
+        ->with('alert-msg','Conta  foi removida com sucesso!')
+        ->with('alert-type', 'success');
+
     }
 
 }

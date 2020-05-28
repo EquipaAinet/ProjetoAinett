@@ -35,6 +35,7 @@ Route::get('conta/create', 'ContaController@create')->name('conta.create');
 Route::delete('conta/{conta}', 'ContaController@destroy')->name('conta.destroy');
 Route::get('conta/recover', 'ContaController@recover')->name('conta.recover');
 Route::patch('conta/recuperar/{id}', 'ContaController@recuperar')->name('conta.recuperar');
+Route::delete('conta/{id}/delete', 'ContaController@delete')->name('conta.delete');
 
 
 //Movimentos
