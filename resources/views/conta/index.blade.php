@@ -4,28 +4,22 @@
 <h2>Contas</h2>
 
 <div class="row mb-3">
-    <div class="col-3">
-        <a  href="{{route('conta.create')}}" class="btn btn-success" role="button" aria-pressed="true">Nova Conta</a>
-    </div>
-    <div class="col-3">
-        <a  href="{{route('conta.recover')}}" class="btn btn-success" role="button" aria-pressed="true">Recuperar Conta</a>
-    </div>
+    <a  href="{{route('conta.create')}}" class="btn btn-success mr-4 ml-2" role="button" aria-pressed="true">Nova Conta</a>
+    <a  href="{{route('conta.recover')}}" class="btn btn-success mr-4" role="button" aria-pressed="true">Recuperar Conta</a>
 </div>
 
-       
+
 
 <table class="table">
     <tr>
-        
         <th>Contas</th>
         <th>Descricao</th>
         <th>Saldo Abertura</th>
         <th>Saldo Atual(€)</th>
-        
     </tr>
         @foreach ($contas as $cont)
             <tr>
-            
+
                 <td>
                     <a href="{{route('movimento.index',['conta' => $cont])}}">{{$cont->nome}}</a>
                 </td>
@@ -41,6 +35,36 @@
                         </form>
                     </td>
             </tr>
+
+           {{-- @foreach($cont->users as $user)
+                @dd($user)
+            @endforeach--}}
         @endforeach
 </table>
+
+<hr/>
+<br/>
+
+@if(Auth::user()->contas != null)
+    <h2>Contas Partilhadas Consigo</h2>
+
+    <table class="table">
+        <tr>
+            <th>Contas</th>
+            <th>Descricao</th>
+            <th>Saldo Abertura</th>
+            <th>Saldo Atual(€)</th>
+        </tr>
+
+        @foreach(Auth::user()->contas as $conta)
+            <td>
+                <a href="{{route('movimento.index',['conta' => $conta])}}">{{$conta->nome}}</a>
+            </td>
+            <td>{{$conta->descricao}}</td>
+            <td>{{$conta->saldo_abertura}}</td>
+            <td>{{$conta->saldo_atual}}€</td>
+        @endforeach
+    </table>
+@endif
+
 @endsection

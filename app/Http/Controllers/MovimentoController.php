@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Movimento;
 use App\Conta;
 use App\Categoria;
+use App\AutorizacoesConta;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -11,11 +12,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class MovimentoController extends Controller
 {
-    public function index(Conta $conta) 
+    public function index(Conta $conta)
     {
         //dd($conta);
         $movimentos = Movimento::where('conta_id',$conta->id)->orderBy('data', 'DESC')->paginate(5);
-       return view('movimentos.index')->withMovimentos($movimentos)->withConta($conta);
+        $tipoLeitura = AutorizacoesConta::where('conta_id',$conta->id)->pluck('so_leitura') ?? 0;
+       return view('movimentos.index')->withMovimentos($movimentos)->withConta($conta)->withTipoLeitura($tipoLeitura);
     }
 
     public function edit(Movimento $movimento)
@@ -53,7 +55,7 @@ class MovimentoController extends Controller
             'categoria_id' =>           'nullable|numeric',
             'descricao' =>              'nullable|string',
         ], [
-    
+
             //error messages
             'data.required' => '"Data" is required.',
             'valor.required' => '"Valor" is required.',
@@ -123,7 +125,7 @@ class MovimentoController extends Controller
             'categoria_id' =>           'nullable|numeric',
             'descricao' =>              'nullable|string',
         ], [
-    
+
             //error messages
             'data.required' => '"Data" is required.',
             'valor.required' => '"Valor" is required.',
@@ -165,10 +167,10 @@ class MovimentoController extends Controller
 
     public function destroy(Movimento $movimento)
     {
-       
+
         DB::table('movimentos')->where('id',$movimento->id)->delete();
-        
-       
+
+
         return redirect()->route('conta.index')
             ->with('alert-msg', 'O Movimento foi removido com sucesso!')
             ->with('alert-type', 'success');

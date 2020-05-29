@@ -10,4 +10,9 @@
         </div>
     </form>
 
+    <br/>
+
+    <h2>Partilhar Conta</h2>
+    @include('utilizadores.partials.list')
+
 @endsection

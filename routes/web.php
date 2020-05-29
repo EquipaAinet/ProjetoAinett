@@ -23,7 +23,7 @@ Route::get('/', 'PageController@index')->name('pages.index');
 Route::get('/home', 'PageController@index')->name('pages.index');
 Route::get('contas', 'ContaController@index')->name('conta.index')->middleware('auth');
 Route::get('movimentos/{conta}', 'MovimentoController@index')->name('movimento.index')->middleware('auth');
-Route::get('estatisticas', 'EstatisticaController@index')->name('estatisticas.index')->middleware('auth'); //tem acesso se tiver autenticado
+Route::get('estatisticas', 'EstatisticaController@index')->name('estatisticas.index')->middleware('auth');
 Route::get('definicoes', 'DefinicaoController@index')->name('definicoes.index')->middleware('auth');
 
 
@@ -34,7 +34,7 @@ Route::post('contas', 'ContaController@store')->name('conta.store');
 Route::get('conta/create', 'ContaController@create')->name('conta.create');
 Route::delete('conta/{conta}', 'ContaController@destroy')->name('conta.destroy');
 Route::get('conta/recover', 'ContaController@edit')->name('conta.recover');
-
+Route::put('conta/{conta}/edit', 'ContaController@share')->name('conta.share');
 
 //Movimentos
 Route::get('movimento/{movimento}/edit', 'MovimentoController@edit')->name('movimentos.edit');

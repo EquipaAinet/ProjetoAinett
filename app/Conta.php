@@ -18,4 +18,9 @@ class Conta extends Model
     {
         return $this->hasMany('App\Movimento', 'Conta', 'nome');
     }
+
+    public function users()
+    {
+        return $this->belongsToMany('App\User', 'autorizacoes_contas', 'conta_id', 'user_id');
+    }
 }

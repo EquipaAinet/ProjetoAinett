@@ -6,7 +6,7 @@
         @include('movimentos.partials.create-edit')
         <div class="form-group text-right">
                 <button type="submit" class="btn btn-success" name="ok">Save</button>
-                <a href="{{route('conta.index')}}" class="btn btn-secondary">Cancel</a>
+                <a href="{{ url()->previous() }}" class="btn btn-secondary">Cancel</a>
 
         </div>
     </form>

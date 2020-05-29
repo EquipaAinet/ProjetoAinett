@@ -8,23 +8,25 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Movimento;
-
-
 use App\Conta;
-
+use App\User;
 
 class ContaController extends Controller
 {
     public function index(){
         $userId = Auth::id();
         $contas=Conta::where('user_id',$userId)->get();
-        return view('conta.index', compact('contas'));
-    } 
 
-    public function edit(Conta $conta)
+        return view('conta.index')->withContas($contas);
+    }
+
+    public function edit(Request $request, Conta $conta)
     {
-        return view('conta.edit')
-            ->withConta($conta);
+        $filtro = $request->filtro ?? '';
+
+        $listaUtilizadores = User::where('name','LIKE','%'.$filtro.'%')->orWhere('email','LIKE','%'.$filtro.'%')->paginate(10);
+
+        return view('conta.edit')->withConta($conta)->withListaUtilizadores($listaUtilizadores);
     }
 
     public function create()
@@ -64,7 +66,7 @@ class ContaController extends Controller
             'saldo_abertura' => $validated_data['saldo_abertura'],
             'saldo_atual' => $validated_data['saldo_atual'],
         ]);
-        //dd($conta); 
+        //dd($conta);
         return redirect()->route('conta.index')
             ->with('alert-msg', 'Conta "' . $conta->nome . '" foi criada com sucesso!')
             ->with('alert-type', 'success');
@@ -111,16 +113,16 @@ class ContaController extends Controller
     }
 
     public function destroy(Conta $conta)
-    {   
+    {
         $movimentos = Movimento::where('conta_id',$conta->id)->delete();
-        
+
         $conta->delete();
         return redirect()->route('conta.index')
             ->with('alert-msg', 'Conta foi removida com sucesso!')
             ->with('alert-type', 'success');
     }
     public function recover(Conta $conta)
-    {   
+    {
         $userId=Auth::id();
        Conta::withTrashed()
         ->where('user_id',$userId)
@@ -130,6 +132,10 @@ class ContaController extends Controller
             ->with('alert-type', 'success');
     }
 
+    public function share(Conta $conta, $id)
+    {
+        $conta->users()->attach($id);
+    }
 }
 
 

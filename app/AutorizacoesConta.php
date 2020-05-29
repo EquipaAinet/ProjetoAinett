@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Autorizacao extends Model
+class AutorizacoesConta extends Model
 {
     public $timestamps = false;
 

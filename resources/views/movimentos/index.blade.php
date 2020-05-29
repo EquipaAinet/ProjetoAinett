@@ -4,11 +4,13 @@
 <h2>Movimentos</h2>
 
 <div class="row mb-3">
+    @if($tipoLeitura->first()==0)
     <div class="col-3">
         <a  href="{{route('movimentos.create', ['conta' => $conta])}}" class="btn btn-success" role="button" aria-pressed="true">Novo Movimento</a>
     </div>
+    @endif
 </div>
-      
+
 
 <table class="table">
     <tr>
@@ -43,14 +45,14 @@
                     </td>
             </tr>
         @endforeach
-        
+
 
 </table>
 
 
-{{$movimentos->links()}}    
-       
-       
+{{$movimentos->links()}}
+
+
 
 
 @endsection
