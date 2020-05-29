@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use App\Movimento;
 use App\Conta;
 use App\User;
+use App\AutorizacoesConta;
 
 class ContaController extends Controller
 {
@@ -25,7 +26,8 @@ class ContaController extends Controller
     {
         $filtro = $request->filtro ?? '';
 
-        $listaUtilizadores = User::where('name','LIKE','%'.$filtro.'%')->orWhere('email','LIKE','%'.$filtro.'%')->paginate(10);
+        $listaUtilizadores = User::where('name','LIKE','%'.$filtro.'%')->orWhere('email','LIKE','%'.$filtro.'%')->paginate(10); //->get()
+        //$contaPartilhadas = Conta::where('id')
 
         return view('conta.edit')->withConta($conta)->withListaUtilizadores($listaUtilizadores);
     }
@@ -79,12 +81,12 @@ class ContaController extends Controller
             $validated_data = $request->validate([
                 'descricao' =>              'nullable|string|max:255',
                 'saldo_abertura' =>         'required|numeric',
-               
+
             ], [
                 //error messages
                 //'nome.required' => '"Nome" is required.',
                 'saldo_abertura.required' => '"Saldo Abertura" is required.',
-                
+
             ]);
         }
         //$conta->fill($request->all());
@@ -95,12 +97,12 @@ class ContaController extends Controller
             ],
             'descricao' =>              'nullable|string|max:255',
             'saldo_abertura' =>         'required|numeric',
-           
+
         ], [
             //error messages
             'nome.required' => '"Nome" is required.',
             'saldo_abertura.required' => '"Saldo Abertura" is required.',
-            
+
         ]);
         }
         $conta->fill($validated_data);
@@ -121,22 +123,19 @@ class ContaController extends Controller
     }
     //contas que podem ser recuperadas
     public function recover()
-    {   
+    {
         $userId=Auth::id();
         $contas=Conta::onlyTrashed()
         ->where('user_id',$userId)
         ->get();
-    
+
         return view('conta.recover')
             ->withContas($contas);
-            
+
     }
     //conta a recuperar
     public function recuperar($id)
-    {   
-       
-
-
+    {
         Conta::onlyTrashed()
         ->where('id',$id)
         ->restore();
@@ -146,27 +145,27 @@ class ContaController extends Controller
         ->restore();
 
         $conta=Conta::findOrfail($id);
-        
-        
+
+
        return redirect()->route('conta.index')
         ->with('alert-msg','Conta '.$conta->nome.' foi recuperada com sucesso!')
         ->with('alert-type', 'success');
-       
-            
+
+
     }
     //contar a eliminar
     public function delete($id){
 
         $conta=Conta::onlyTrashed()
         ->findOrfail($id);
-        
 
-        
+
+
         DB::table('autorizacoes_contas')->where('conta_id',$id)->delete();
         Movimento::where('conta_id',$id)->forceDelete();
         Conta::where('id',$id)->forceDelete();
-        
-        
+
+
         return redirect()->route('conta.index')
         ->with('alert-msg','Conta ' .$conta->nome . ' foi removida com sucesso!')
         ->with('alert-type', 'success');
@@ -176,6 +175,22 @@ class ContaController extends Controller
     public function share(Conta $conta, $id)
     {
         $conta->users()->attach($id);
+        $userName=User::where('id',$id)->pluck('name')->first();
+
+        return redirect()->route('conta.index')
+            ->with('alert-msg','Conta '.$conta->nome.' foi partilhada com '.$userName)
+            ->with('alert-type', 'success');
+    }
+
+    public function unshare(Conta $conta, $id)
+    {
+        $conta->users()->detach($id);
+
+        $userName=User::where('id',$id)->pluck('name')->first();
+
+        return redirect()->route('conta.index')
+            ->with('alert-msg','Conta '.$conta->nome.' teve a partilha com '.$userName.'removida com sucesso!')
+            ->with('alert-type', 'success');
     }
 }
 

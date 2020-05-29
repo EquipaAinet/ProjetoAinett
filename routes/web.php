@@ -36,7 +36,8 @@ Route::delete('conta/{conta}', 'ContaController@destroy')->name('conta.destroy')
 Route::get('conta/recover', 'ContaController@recover')->name('conta.recover');
 Route::patch('conta/recuperar/{id}', 'ContaController@recuperar')->name('conta.recuperar');
 Route::delete('conta/{id}/delete', 'ContaController@delete')->name('conta.delete');
-Route::put('conta/{conta}/edit', 'ContaController@share')->name('conta.share');
+Route::get('conta/{conta}/edit/{id}', 'ContaController@share')->name('conta.share');
+Route::get('conta/{conta}/edit/{id}/unshare', 'ContaController@unshare')->name('conta.unshare');
 
 //Movimentos
 Route::get('movimento/{movimento}/edit', 'MovimentoController@edit')->name('movimentos.edit');
@@ -45,12 +46,8 @@ Route::post('movimento/{conta}', 'MovimentoController@store')->name('movimentos.
 Route::get('movimento/{conta}/create', 'MovimentoController@create')->name('movimentos.create');
 Route::delete('movimento/{movimento}', 'MovimentoController@destroy')->name('movimentos.destroy');
 
-
-
-
 //User
 Route::get('definicoes/edit', 'DefinicaoController@edit')->name('definicoes.edit');
-
 Route::put('user/{user}', 'UserController@update')->name('user.update');
 Route::put('definicoes/{user}', 'DefinicaoController@update')->name('definicoes.update');
 Route::get('definicoes/{user}', 'DefinicaoController@apagar')->name('definicoes.apagar');
@@ -58,8 +55,6 @@ Route::delete('definicoes/{user}', 'DefinicaoController@destroy')->name('definic
 Route::get('utilizadores', 'UserController@index')->name('utilizadores.index')->middleware('auth');
 Route::get('utilizadores/view/{id}', 'UserController@viewProfile')->name('utilizadores.view')->middleware('auth');
 Route::put('utilizadores/view/{id}', 'UserController@guardarTipo')->name('utilizadores.view.update.type')->middleware('auth');
-
-
 
 //Route::get('menu', function(){
 //    return view('layout');

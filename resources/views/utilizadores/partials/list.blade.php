@@ -1,4 +1,8 @@
-<form method="GET" action="{{route('utilizadores.index')}}" class="form-group">
+@if(Route::current()->getName()=='utilizadores.index')
+    <form method="GET" action="{{route('utilizadores.index')}}" class="form-group">
+@elseif(Route::current()->getName()=='conta.edit')
+    <form method="GET" action="{{route('conta.edit', ['conta' => $conta])}}" class="form-group">
+@endif
     <div class="input-group">
         <input type="text" class="form-control" name="filtro" placeholder="Pesquisar utilizadores por nome ou email">
         <div class="input-group-append">
@@ -9,13 +13,13 @@
 
 <table class="table">
     <tr>
+        <th>Foto</th>
         <th>Nome</th>
         <th>Email</th>
     </tr>
 
     @foreach ($listaUtilizadores as $user)
         <tr>
-
             @if($user->foto==null)
                 <td>
                     <img class="img-profile rounded-circle" src="/img/default_img.png" width="50px" height="50px" >
@@ -31,7 +35,7 @@
             @if(Route::current()->getName()=='utilizadores.index')
                 <td><a href="{{route('utilizadores.view', ['id' => $user->id])}}" class="btn btn-primary btn-sm" role="button" aria-pressed="true">Visualizar</a></td>
             @elseif(Route::current()->getName()=='conta.edit')
-                <td><a href="" class="btn btn-success btn-sm" role="button" aria-pressed="true">Partilhar</a></td>
+                <td><a href="{{route('conta.share', ['conta' => $conta,'id' => $user->id])}}" class="btn btn-success btn-sm" role="button" aria-pressed="true">Partilhar</a></td>
             @endif
 
         </tr>

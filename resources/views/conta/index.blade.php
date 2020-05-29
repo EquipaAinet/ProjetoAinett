@@ -45,7 +45,7 @@
 <hr/>
 <br/>
 
-@if(Auth::user()->contas != null)
+@if(!Auth::user()->contas->isEmpty())
     <h2>Contas Partilhadas Consigo</h2>
 
     <table class="table">
