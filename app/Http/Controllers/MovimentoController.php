@@ -145,11 +145,11 @@ class MovimentoController extends Controller
             $movimento->saldo_inicial=$movimentoAntesDoAlterar->saldo_final;
             $movimento->save();
            
-            $this->calculaSaldos($conta, $movimento);
+            $this->calculaSaldosUpdate($conta, $movimento);
         }else{//se nao tiver movimento anterior ao criado
             $movimento->saldo_inicial=$conta->saldo_abertura;
             $movimento->save();
-            $this->calculaSaldos($conta, $movimento);
+            $this->calculaSaldosUpdate($conta, $movimento);
         }
 
 
@@ -265,9 +265,9 @@ class MovimentoController extends Controller
     public function destroy(Movimento $movimento)
     {
         $conta=Conta::findOrfail($movimento->conta_id);
-        Movimento::where('id',$movimento->id)->forceDelete();
+        $movimento = Movimento::where('id',$movimento->id)->forceDelete();
         
-       
+        $this->calculaSaldosApagar($conta);
         return redirect()->route('movimento.index', compact('conta'))
             ->with('alert-msg', 'O Movimento foi removido com sucesso!')
             ->with('alert-type', 'success');
@@ -283,8 +283,6 @@ class MovimentoController extends Controller
         ->where('id', '<=', $movimento->id)
         ->get();
         
-
-
       
        $count=0;
         
@@ -329,5 +327,85 @@ class MovimentoController extends Controller
         
     }
 
+    private function calculaSaldosUpdate($conta, $movimento)
+    {
+        //vai buscar o movimento que esta a ser alterado e todos acima dele
+        $movimentos = Movimento::where('conta_id', $conta->id)
+        ->where('data','>=',$movimento->data)
+        ->get();
 
+
+        $count=0;
+        
+        
+        foreach($movimentos as $mov){
+            if($count==0){//primeira posicoa do valor atualizado
+                if($mov->tipo=="R"){
+                    
+                    $mov->saldo_final=$mov->saldo_inicial+$mov->valor;
+                    $mov->save();
+                    
+                    
+                }else{
+                    
+                    $mov->saldo_final=$mov->saldo_inicial-$mov->valor;
+                    $mov->save();
+                   
+                   
+                }
+            }else{//alterar os movimentos para cima do valor atualizado
+                $mov->saldo_inicial=$movimentos[$count-1]->saldo_final;
+               
+                if($mov->tipo=="R"){
+                    $mov->saldo_final=$movimentos[$count-1]->saldo_final+$mov->valor;
+                    $mov->save();
+                }else{
+                    $mov->saldo_final=$movimentos[$count-1]->saldo_final-$mov->valor;
+                    $mov->save();
+                }
+                
+                
+
+            }   
+            $valor_saldo_atual=$mov->saldo_final;
+            
+            $count++;
+        }
+        $conta->saldo_atual=$valor_saldo_atual;
+        $conta->save();
+
+    }
+
+
+    private function calculaSaldosApagar($conta)
+    {
+        //vai buscar movimentos dessa conta, sem o movimento que ja foi removida
+        $movimentos = Movimento::where('conta_id',$conta->id)
+            ->orderBy('data', 'ASC')
+            ->get();
+        //dd($movimentos);
+        $count = 0;
+        if($movimentos != null)
+        {
+            foreach($movimentos as $mov)
+            {
+                if($count == 0)
+                {
+                    if($mov->tipo == 'R')
+                    {
+                        $mov->saldo_inicial = $conta->saldo_abertura;
+                        $mov->saldo_final = $mov->saldo_inicial + $mov->valor;
+                        $mov->save();
+                    }
+                    else
+                    {
+                        $mov->saldo_inicial = $conta->saldo_abertura;
+                        $mov->saldo_final = $mov->saldo_inicial - $mov->valor;
+                        $mov->save();
+                    }
+                }
+
+            }
+        }
+    }
 }

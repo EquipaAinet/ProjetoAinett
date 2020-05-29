@@ -54,7 +54,7 @@ class DefinicaoController extends Controller
         //$movimentos=Movimento::where('user_id',$user->id)->get();
         $contas = Conta::where('user_id', $user->id)->get();
 
-        if (Hash::check($pass, $hashedPassword)) // Password correta
+        if (Hash::check($pass, $hashedPassword) && ($user->email == $request->email)) // Password correta
         {
             // Password correta
             
@@ -97,7 +97,7 @@ class DefinicaoController extends Controller
         else
         {
             return redirect()->route('definicoes.apagar',compact('user'))
-                ->with('alert-msg', 'Password não está correta!')
+                ->with('alert-msg', 'Password ou Email não estão corretos!')
                 ->with('alert-type', 'danger');
         }
     }
