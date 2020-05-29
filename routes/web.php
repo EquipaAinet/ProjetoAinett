@@ -33,7 +33,9 @@ Route::put('conta/{conta}', 'ContaController@update')->name('conta.update');
 Route::post('contas', 'ContaController@store')->name('conta.store');
 Route::get('conta/create', 'ContaController@create')->name('conta.create');
 Route::delete('conta/{conta}', 'ContaController@destroy')->name('conta.destroy');
-Route::get('conta/recover', 'ContaController@edit')->name('conta.recover');
+Route::get('conta/recover', 'ContaController@recover')->name('conta.recover');
+Route::patch('conta/recuperar/{id}', 'ContaController@recuperar')->name('conta.recuperar');
+Route::delete('conta/{id}/delete', 'ContaController@delete')->name('conta.delete');
 Route::put('conta/{conta}/edit', 'ContaController@share')->name('conta.share');
 
 //Movimentos

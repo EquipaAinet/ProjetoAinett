@@ -35,7 +35,7 @@ class DefinicaoController extends Controller
         $user->fill($request->all());
         $user->save();
         return redirect()->route('definicoes.edit')
-            ->with('alert-msg', 'Conta "' . $user->nome . '" foi alterada com sucesso!')
+            ->with('alert-msg', 'Conta "' . $user->nome . '"  foi alterada com sucesso!')
             ->with('alert-type', 'success');
        
     }
@@ -51,29 +51,34 @@ class DefinicaoController extends Controller
         $hashedPassword = $user->password;
         
 
-        $movimentos=Movimento::where('user_id',$userId)->get();
+        //$movimentos=Movimento::where('user_id',$user->id)->get();
+        $contas = Conta::where('user_id', $user->id)->get();
 
         if (Hash::check($pass, $hashedPassword)) // Password correta
         {
             // Password correta
             
            
-            $contas = Conta::where('user_id', $user->id)->get();
+           // $contas = Conta::where('user_id', $user->id)->get();
             
             //movimetnos
-            foreach($contas as $conta){
-              Movimento::where('conta_id',$conta->id)->delete();
-                //autorizacoes das contas(onde user id e o proprio)
-                DB::table('autorizacoes_contas')->where('conta_id',$conta->id)->delete();
+            $contas = Conta::where('user_id', $user->id)->get();
+            if($contas!=null){
+                foreach($contas as $conta){
+
+
+                Movimento::where('conta_id',$conta->id)->forceDelete();
+                    //autorizacoes das contas(onde user id e o proprio)
+                    DB::table('autorizacoes_contas')->where('conta_id',$conta->id)->delete();
+                }
             }
-            
             
             
             //autorizacoes das contas(onde conta id in lista da contas)
             DB::table('autorizacoes_contas')->where('user_id',$user->id)->delete();
             
             //apagar contas
-            Conta::where('user_id',$user->id)->delete();
+            Conta::where('user_id',$user->id)->forceDelete();
 
            
             //apagar foto
@@ -83,7 +88,7 @@ class DefinicaoController extends Controller
 
            
            //apagar user
-            $user->delete();
+            $user->forceDelete();
             Auth::logout(); 
             return redirect()->route('pages.index')
                 ->with('alert-msg', 'User "' . $user->name . '" foi removido com sucesso!')
@@ -91,7 +96,7 @@ class DefinicaoController extends Controller
         }
         else
         {
-            return redirect()->route('pages.index')
+            return redirect()->route('definicoes.apagar',compact('user'))
                 ->with('alert-msg', 'Password não está correta!')
                 ->with('alert-type', 'danger');
         }
@@ -99,3 +104,4 @@ class DefinicaoController extends Controller
 
    
 }
+

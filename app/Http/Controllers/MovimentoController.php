@@ -65,26 +65,104 @@ class MovimentoController extends Controller
         //dd($validated_data);
 
         //Atualiza automaticamente saldo final e inicial
+
+        /*
         $conta = Conta::find($movimento->conta_id);
+        $movimentos = Movimento::where('conta_id', $conta->id)
+            ->where('data','>=',$movimento->data)
+            ->where('id', '>=', $movimento->id)
+            ->get();
 
-        if($validated_data['tipo'] == 'R')
-        {
-            $conta->saldo_atual = $movimento->saldo_inicial + $validated_data['valor'];
-            $conta->save();
-        }
-        else
-        {
-            $conta->saldo_atual = $movimento->saldo_inicial - $validated_data['valor'];
-            $conta->save();
-        }
+        //dd($movimentos);
 
-        $movimento->saldo_final = $conta->saldo_atual;
+        
+        
+        $count=0;
+        
 
-        $movimento->fill($validated_data);
+        foreach($movimentos as $mov){
+            if($count==0){//primeira posicoa do valor atualizado
+                if($validated_data['tipo']=="R"){
+                    $mov->valor=$validated_data["valor"];
+                    $mov->saldo_final=$mov->saldo_inicial+$validated_data['valor'];
+
+                   $mov->fill([
+                                'data' => $validated_data['data'],
+                                'tipo' => $validated_data['tipo'],
+                                'descricao' => $validated_data['descricao'],
+                                'categoria_id'=>$validated_data['categoria_id'],
+                            ]);
+                    $mov->save();
+                }else{
+                    $mov->valor=$validated_data["valor"];
+                    $mov->saldo_final=$mov->saldo_inicial-$validated_data['valor']; 
+                    $mov->fill([
+                        'data' => $validated_data['data'],
+                        'tipo' => $validated_data['tipo'],
+                        'descricao' => $validated_data['descricao'],
+                        'categoria_id'=>$validated_data['categoria_id'],
+                    ]);
+                
+                    $mov->save();
+                }
+            }else{//alterar os movimentos para cima do valor atualizado
+                $mov->saldo_inicial=$movimentos[$count-1]->saldo_final;
+               
+                if($mov->tipo=="R"){
+                    $mov->saldo_final=$mov->saldo_inicial+$mov->valor;
+                    $mov->save();
+                }else{
+                    $mov->saldo_final=$mov->saldo_inicial-$mov->valor;
+                    $mov->save();
+                }
+
+
+            }   
+            $valor_saldo_atual=$mov->saldo_final;
+            $count++;
+        }*/
+        $conta = Conta::find($movimento->conta_id);
+        $movimento->fill([
+            'valor'=> $validated_data['valor'],
+            'data' => $validated_data['data'],
+            'tipo' => $validated_data['tipo'],
+            'descricao' => $validated_data['descricao'],
+            'categoria_id'=>$validated_data['categoria_id'],
+        ]);
         $movimento->save();
-        return redirect()->route('conta.index')
-            ->with('alert-msg', 'O Movimento "' . $movimento->id . '" foi alterado com sucesso!')
+
+
+
+        $movimentoAntesDoAlterar = Movimento::where('conta_id', $conta->id)
+        ->where('data','<=',$movimento->data)
+        ->where('id','!=',$movimento->id)
+        ->orderBy('data','DESC')
+        ->first();
+       
+        
+        //se tiver algum movimento antes do criado
+        if($movimentoAntesDoAlterar!=null){
+            $movimento->saldo_inicial=$movimentoAntesDoAlterar->saldo_final;
+            $movimento->save();
+           
+            $this->calculaSaldos($conta, $movimento);
+        }else{//se nao tiver movimento anterior ao criado
+            $movimento->saldo_inicial=$conta->saldo_abertura;
+            $movimento->save();
+            $this->calculaSaldos($conta, $movimento);
+        }
+
+
+
+
+
+       /* $conta->saldo_atual =$valor_saldo_atual;
+        $conta->save();*/
+    
+        return redirect()->route('movimento.index', compact('conta'))
+            ->with('alert-msg', 'O Movimento com a data "' . $movimento->data . '" foi alterado com sucesso!')
             ->with('alert-type', 'success');
+
     }
 
     public function create(Conta $conta)
@@ -134,7 +212,7 @@ class MovimentoController extends Controller
     }
 
         //dd($validated_data);
-
+        
         //Atualiza automaticamente saldo final e inicial
         if($validated_data['tipo'] == 'R')
         {
@@ -159,21 +237,97 @@ class MovimentoController extends Controller
             'categoria_id' => $validated_data['categoria_id'],
             'descricao' => $validated_data['descricao'],
         ]);
-        //dd($movimento);
-        return redirect()->route('conta.index')
-            ->with('alert-msg', 'O Movimento "' . $movimento->id . '" foi criado com sucesso!')
+
+        $movimentoAntesDoAlterar = Movimento::where('conta_id', $conta->id)
+        ->where('data','<',$movimento->data)
+        ->where('id', '<', $movimento->id)
+        ->orderBy('id','DESC')
+        ->first();
+        
+        //se tiver algum movimento antes do criado
+        if($movimentoAntesDoAlterar!=null){
+            $movimento->saldo_inicial=$movimentoAntesDoAlterar->saldo_final;
+            $movimento->save();
+           
+            $this->calculaSaldos($conta, $movimento);
+        }else{//se nao tiver movimento anterior ao criado
+            $movimento->saldo_inicial=$conta->saldo_abertura;
+            $movimento->save();
+            $this->calculaSaldos($conta, $movimento);
+        }
+        
+       
+        return redirect()->route('movimento.index', compact('conta'))
+            ->with('alert-msg', 'O Movimento com data "' . $movimento->data . '" foi criado com sucesso!')
             ->with('alert-type', 'success');
     }
 
     public function destroy(Movimento $movimento)
     {
-
-        DB::table('movimentos')->where('id',$movimento->id)->delete();
-
-
-        return redirect()->route('conta.index')
+        $conta=Conta::findOrfail($movimento->conta_id);
+        Movimento::where('id',$movimento->id)->forceDelete();
+        
+       
+        return redirect()->route('movimento.index', compact('conta'))
             ->with('alert-msg', 'O Movimento foi removido com sucesso!')
             ->with('alert-type', 'success');
     }
+
+
+    private function calculaSaldos(Conta $conta, Movimento $movimento)
+    {
+        
+        //buscar valores acima por ordem de id e data em tabela
+        $movimentos = Movimento::where('conta_id', $conta->id)
+        ->where('data','>=',$movimento->data)
+        ->where('id', '<=', $movimento->id)
+        ->get();
+        
+
+
+      
+       $count=0;
+        
+        
+        foreach($movimentos as $mov){
+            if($count==0){//primeira posicoa do valor atualizado
+                if($mov->tipo=="R"){
+                    
+                    $mov->saldo_final=$mov->saldo_inicial+$mov->valor;
+                    $mov->save();
+                    
+                    
+                }else{
+                    
+                    $mov->saldo_final=$mov->saldo_inicial-$mov->valor;
+                    $mov->save();
+                   
+                   
+                }
+            }else{//alterar os movimentos para cima do valor atualizado
+                $mov->saldo_inicial=$movimentos[$count-1]->saldo_final;
+               
+                if($mov->tipo=="R"){
+                    $mov->saldo_final=$movimentos[$count-1]->saldo_final+$mov->valor;
+                    $mov->save();
+                }else{
+                    $mov->saldo_final=$movimentos[$count-1]->saldo_final-$mov->valor;
+                    $mov->save();
+                }
+                
+                
+
+            }   
+            $valor_saldo_atual=$mov->saldo_final;
+            
+            $count++;
+        }
+        $conta->saldo_atual=$valor_saldo_atual;
+        $conta->save();
+        
+
+        
+    }
+
 
 }

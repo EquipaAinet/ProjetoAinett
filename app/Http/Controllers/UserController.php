@@ -88,8 +88,8 @@ class UserController extends Controller
             'foto'=>$urlFoto,
         ]);
         $user->save();
-        return redirect()->route('definicoes.edit')
-            ->with('alert-msg', 'User "' . $user->name . '" foi alterada com sucesso!')
+        return redirect()->route('pages.index')
+            ->with('alert-msg', 'User "' . $user->name . '" alterado com sucesso!')
             ->with('alert-type', 'success');
        
     }

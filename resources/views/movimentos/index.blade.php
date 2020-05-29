@@ -1,7 +1,8 @@
 @extends('layout_admin')
 @section('content')
 
-<h2>Movimentos</h2>
+<h4>Conta:{{$conta->nome}}</h4>
+<h4>Saldo atual: {{$conta->saldo_atual}} €</h4>
 
 <div class="row mb-3">
     @if($tipoLeitura->first()==0)

@@ -16,11 +16,16 @@
         <div class="small text-danger">{{$message}}</div>
     @enderror
 </div>
+<div class="form-group text-right">
+    @csrf
+    @method("DELETE")
+    <input type="submit" class="btn btn-danger btn-sm" value="Eliminar Perfil" />
+    <a href="http://projetoainett.test/home" class="btn btn-secondary">Cancel</a>
+</div>
 
-
-        @csrf
-        @method("DELETE")
-        <input type="submit" class="btn btn-danger btn-sm" value="Eliminar Perfil" />
+        
 </form>
 
 @endsection
+
+
