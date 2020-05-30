@@ -265,9 +265,33 @@ class MovimentoController extends Controller
     public function destroy(Movimento $movimento)
     {
         $conta=Conta::findOrfail($movimento->conta_id);
-        $movimento = Movimento::where('id',$movimento->id)->forceDelete();
+        $movimentoAntesDoAlterado = Movimento::where('conta_id', $conta->id)
+        ->where('data','<=',$movimento->data)
+        ->where('id', '!=', $movimento->id)
+        ->orderBy('data','DESC')
+        ->first();
+
+        if($movimentoAntesDoAlterado!=null){
+            Movimento::where('id',$movimento->id)->forceDelete();
+            $this->calculaSaldosApagar($conta,$movimentoAntesDoAlterado);
+        }else{
+
+            if($movimento->tipo=="R"){
+                    
+               $conta->saldo_atual=$conta->saldo_abertura;
+                
+                
+            }else{
+                
+                $conta->saldo_atual=$conta->saldo_abertura;
+               
+               
+            }
+            $conta->save();
+            Movimento::where('id',$movimento->id)->forceDelete();
+        }
         
-        $this->calculaSaldosApagar($conta);
+        
         return redirect()->route('movimento.index', compact('conta'))
             ->with('alert-msg', 'O Movimento foi removido com sucesso!')
             ->with('alert-type', 'success');
@@ -377,34 +401,41 @@ class MovimentoController extends Controller
     }
 
 
-    private function calculaSaldosApagar($conta)
+    private function calculaSaldosApagar($conta,$movimentoAntesDoAlterado)
     {
+        //recebe o movimento antes do apagado
         //vai buscar movimentos dessa conta, sem o movimento que ja foi removida
-        $movimentos = Movimento::where('conta_id',$conta->id)
-            ->orderBy('data', 'ASC')
-            ->get();
-        //dd($movimentos);
+        $movimentos = Movimento::where('conta_id', $conta->id)
+        ->where('data','>=',$movimentoAntesDoAlterado->data)
+        ->where('id','>=',$movimentoAntesDoAlterado->id)
+        ->orderBy('data','ASC')
+        ->get();
+        
         $count = 0;
         if($movimentos != null)
         {
             foreach($movimentos as $mov)
             {
-                if($count == 0)
-                {
-                    if($mov->tipo == 'R')
-                    {
-                        $mov->saldo_inicial = $conta->saldo_abertura;
-                        $mov->saldo_final = $mov->saldo_inicial + $mov->valor;
-                        $mov->save();
-                    }
-                    else
-                    {
-                        $mov->saldo_inicial = $conta->saldo_abertura;
-                        $mov->saldo_final = $mov->saldo_inicial - $mov->valor;
-                        $mov->save();
-                    }
-                }
+                    if($count!=0){
+                        $mov->saldo_inicial = $movimentos[$count-1]->saldo_final;
+                        if($mov->tipo == 'R')
+                        {
+                            
+                             $mov->saldo_final = $mov->saldo_inicial + $mov->valor;
+                             $mov->save();
+                        }
+                        else
+                        {
+                           
+                            $mov->saldo_final = $mov->saldo_inicial - $mov->valor;
+                            $mov->save();
+                        }
 
+                    }
+
+                    $conta->saldo_atual=$mov->saldo_final;
+                    $conta->save();
+                    $count++;
             }
         }
     }
