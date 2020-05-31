@@ -270,25 +270,14 @@ class MovimentoController extends Controller
         ->where('id', '!=', $movimento->id)
         ->orderBy('data','DESC')
         ->first();
+       
 
-        if($movimentoAntesDoAlterado!=null){
+        if($movimentoAntesDoAlterado==null){
+            Movimento::where('id',$movimento->id)->forceDelete();
+            $this->calculaSaldosApagar($conta,null);
+        }else{
             Movimento::where('id',$movimento->id)->forceDelete();
             $this->calculaSaldosApagar($conta,$movimentoAntesDoAlterado);
-        }else{
-
-            if($movimento->tipo=="R"){
-                    
-               $conta->saldo_atual=$conta->saldo_abertura;
-                
-                
-            }else{
-                
-                $conta->saldo_atual=$conta->saldo_abertura;
-               
-               
-            }
-            $conta->save();
-            Movimento::where('id',$movimento->id)->forceDelete();
         }
         
         
@@ -403,40 +392,126 @@ class MovimentoController extends Controller
 
     private function calculaSaldosApagar($conta,$movimentoAntesDoAlterado)
     {
-        //recebe o movimento antes do apagado
-        //vai buscar movimentos dessa conta, sem o movimento que ja foi removida
-        $movimentos = Movimento::where('conta_id', $conta->id)
-        ->where('data','>=',$movimentoAntesDoAlterado->data)
-        ->where('id','>=',$movimentoAntesDoAlterado->id)
-        ->orderBy('data','ASC')
-        ->get();
         
-        $count = 0;
-        if($movimentos != null)
-        {
-            foreach($movimentos as $mov)
-            {
-                    if($count!=0){
-                        $mov->saldo_inicial = $movimentos[$count-1]->saldo_final;
+        //recebe o movimento antes do apagado ou null se nao tiver movimento anterior
+        $count=0;
+        if($movimentoAntesDoAlterado==null){//nao tem movimento anterior
+            $movimentos=Movimento::where('conta_id',$conta->id)
+            ->orderby('data','ASC')
+            ->get();
+
+            $Null=null;
+                foreach($movimentos as $movi){
+
+                    $Null=1;
+                }
+            
+            if( $Null!=null){ //tem movimentos pra cima
+                foreach($movimentos as $mov){
+                    if($count==0){
                         if($mov->tipo == 'R')
                         {
-                            
-                             $mov->saldo_final = $mov->saldo_inicial + $mov->valor;
-                             $mov->save();
+                            $mov->saldo_inicial=$conta->saldo_abertura;    
+                            $mov->saldo_final = $mov->saldo_inicial + $mov->valor;
+                            $mov->save();
                         }
                         else
                         {
-                           
+                            $mov->saldo_inicial=$conta->saldo_abertura;
                             $mov->saldo_final = $mov->saldo_inicial - $mov->valor;
                             $mov->save();
                         }
-
+                    }else{
+                        
+                        
+                        if($mov->tipo == 'R')
+                        {
+                            $mov->saldo_inicial=$movimentos[$count-1]->saldo_final;   
+                            $mov->saldo_final = $mov->saldo_inicial + $mov->valor;
+                            $mov->save();
+                        }
+                        else
+                        {
+                            $mov->saldo_inicial=$movimentos[$count-1]->saldo_final;
+                            $mov->saldo_final = $mov->saldo_inicial - $mov->valor;
+                            $mov->save();
+                        }
                     }
-
+                    $count++;
                     $conta->saldo_atual=$mov->saldo_final;
                     $conta->save();
-                    $count++;
+                 }
+
+            }else{//nao tem movimentos pra cima
+                $conta->saldo_atual=$conta->saldo_abertura;
+                $conta->save();
+
             }
         }
+        if($movimentoAntesDoAlterado!=null){
+
+                //vai buscar movimentos depois do movimentoAntesDoAlterado
+                $movimentos = Movimento::where('conta_id', $conta->id)
+                ->where('data','>=',$movimentoAntesDoAlterado->data)
+                ->where('id','!=',$movimentoAntesDoAlterado->id)
+                ->orderBy('data','ASC')
+                ->get();
+
+                $Null=null;
+                foreach($movimentos as $movi){
+
+                    $Null=1;
+                }
+
+                
+
+                if($Null==1){//Ouver movimentos a seguir ao alterado
+                    foreach($movimentos as $mov)
+                    {
+                                if($count==0){
+                                   
+                                   
+                                    if($mov->tipo == 'R')
+                                    {
+                                        $mov->saldo_inicial = $movimentoAntesDoAlterado->saldo_final;
+                                        $mov->saldo_final = $mov->saldo_inicial + $mov->valor;
+                                        $mov->save();
+                                    }
+                                    else
+                                    {
+                                        $mov->saldo_inicial = $movimentoAntesDoAlterado->saldo_final;
+                                        $mov->saldo_final = $mov->saldo_inicial - $mov->valor;
+                                        $mov->save();
+                                    }
+
+                                }else{
+                                
+                                    if($mov->tipo == 'R')
+                                    {
+                                        $mov->saldo_inicial=$movimentos[$count-1]->saldo_final;    
+                                        $mov->saldo_final = $mov->saldo_inicial + $mov->valor;
+                                        $mov->save();
+                                    }
+                                    else
+                                    {
+                                        $mov->saldo_inicial=$movimentos[$count-1]->saldo_final;
+                                        $mov->saldo_final = $mov->saldo_inicial - $mov->valor;
+                                        $mov->save();
+                                    }
+                                }
+
+                                $conta->saldo_atual=$mov->saldo_final;
+                                $conta->save();
+                                $count++;
+                        }
+                }else{//se nao ouver movimentos a seguir ao alterado
+
+                    
+                    $conta->saldo_atual=$movimentoAntesDoAlterado->saldo_final;
+                    $conta->save();
+                    
+                }
+        }
+       
     }
 }

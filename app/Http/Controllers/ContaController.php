@@ -105,9 +105,18 @@ class ContaController extends Controller
 
         ]);
         }
+
+        $saldo_abertura_antigo=$conta->saldo_abertura;
+
         $conta->fill($validated_data);
         $conta->save();
-        return redirect()->route('conta.index')
+       
+        if($request->saldo_abertura!=$saldo_abertura_antigo){
+            
+            $this->calculaSaldosUpdate($conta);
+        }
+
+         return redirect()->route('conta.index')
             ->with('alert-msg', 'Conta "' . $conta->nome . '" foi alterada com sucesso!')
             ->with('alert-type', 'success');
     }
@@ -192,8 +201,58 @@ class ContaController extends Controller
             ->with('alert-msg','Conta '.$conta->nome.' teve a partilha com '.$userName.'removida com sucesso!')
             ->with('alert-type', 'success');
     }
-}
 
+
+    private function calculaSaldosUpdate($conta)
+    {
+        //vai buscar os movimentos todos por data ascendente
+        $movimentos = Movimento::where('conta_id', $conta->id)
+        ->orderby('data','ASC')
+        ->get();
+       
+
+        $count=0;
+        
+        
+        foreach($movimentos as $mov){
+            if($count==0){//primeiro movimento
+                $mov->saldo_inicial=$conta->saldo_abertura;
+                if($mov->tipo=="R"){
+                   
+                    $mov->saldo_final=$mov->saldo_inicial+$mov->valor;
+                    $mov->save();
+                    
+                    
+                }else{
+                    
+                    $mov->saldo_final=$mov->saldo_inicial-$mov->valor;
+                    $mov->save();
+                   
+                   
+                }
+            }else{//alterar os movimentos para cima do valor atualizado
+                $mov->saldo_inicial=$movimentos[$count-1]->saldo_final;
+               
+                if($mov->tipo=="R"){
+                    $mov->saldo_final=$movimentos[$count-1]->saldo_final+$mov->valor;
+                    $mov->save();
+                }else{
+                    $mov->saldo_final=$movimentos[$count-1]->saldo_final-$mov->valor;
+                    $mov->save();
+                }
+                
+                
+
+            }   
+            $valor_saldo_atual=$mov->saldo_final;
+            
+            $count++;
+        }
+        $conta->saldo_atual=$valor_saldo_atual;
+        $conta->save();
+
+    }
+}
 
 //$movimentos = Movimento::where('conta_id',$conta->id)->get(['id', 'data', 'valor', 'saldo_inicial', 'saldo_final', 'tipo']);
        // return view('movimentos.index', compact('movimentos'));
