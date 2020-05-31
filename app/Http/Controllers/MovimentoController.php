@@ -185,7 +185,7 @@ class MovimentoController extends Controller
         if($request->tipo == 'R')
         {
             $validated_data = $request->validate([
-                'data' =>                   'required',
+                'data' =>                   'required|date',
                 'valor' =>                  'required|numeric|min:0',
                 'tipo' =>                   'required|in:R,D',
                 'categoria_id' =>           'nullable|numeric',
@@ -197,7 +197,7 @@ class MovimentoController extends Controller
     else
     {
         $validated_data = $request->validate([
-            'data' =>                   'required',
+            'data' =>                   'required|date',
             'valor' =>                  'required|numeric|min:0',
             'tipo' =>                   'required|in:R,D',
             'categoria_id' =>           'nullable|numeric',

@@ -20,6 +20,7 @@
         <th>Saldo Inicial</th>
         <th>Saldo Final</th>
         <th>Tipo</th>
+        <th>Imagem</th>
 
     </tr>
         @foreach ($movimentos as $mov)
@@ -36,6 +37,16 @@
                         Despesa
                     @endif
                 </td>
+                @if($mov->imagem_doc==null)
+                <td>
+                    <p>Não Disponível</p>
+                </td>
+                 @else
+                <td>
+                    <img class="img-profile rounded-circle" src="{{asset('contents'.$mov->imagem_doc)}}" width="50px" height="50px" >
+                </td>
+               
+                @endif
                 <td><a href="{{route('movimentos.edit', ['movimento' => $mov])}}" class="btn btn-primary btn-sm" role="button" aria-pressed="true">Alterar</a></td>
                     <td>
                         <form action="{{route('movimentos.destroy',['movimento' => $mov])}}" method="POST">

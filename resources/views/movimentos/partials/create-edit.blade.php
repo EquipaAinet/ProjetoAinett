@@ -67,7 +67,7 @@
         let select_cat = document.getElementById('selectCategoriasDespesas')
         let select_tipo = document.getElementById('inputTipo')
         let tipo_selecionado = select_tipo.options[select_tipo.selectedIndex].value
-        alert(tipo_selecionado)
+        //alert(tipo_selecionado)
         if(tipo_selecionado == 'R')
         {
             document.getElementById('categoria_tipoR').style.visibility = 'visible';
@@ -83,7 +83,7 @@
 
     }
 
-    //alterarTipo()
+    
     </script> 
 @endpush
 

@@ -59,6 +59,7 @@ Route::put('utilizadores/view/{id}', 'UserController@guardarTipo')->name('utiliz
 //Route::get('menu', function(){
 //    return view('layout');
 //})->middleware('auth');
+$contents=Storage::get('docs/');
 
 Auth::routes(['verify' => true]);//ver se conta esta veridicada
 
