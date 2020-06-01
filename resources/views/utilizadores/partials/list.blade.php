@@ -4,11 +4,27 @@
     <form method="GET" action="{{route('conta.edit', ['conta' => $conta])}}" class="form-group">
 @endif
     <div class="input-group">
-        <input type="text" class="form-control" name="filtro" placeholder="Pesquisar utilizadores por nome ou email">
+        <input type="text" class="form-control" name="filtroNome" placeholder="Pesquisar utilizadores por nome ou email">
         <div class="input-group-append">
             <button class="btn btn-outline-secondary" type="submit">Procurar <i class="fas fa-fw fa-search"></i></button>
         </div>
     </div>
+    @if(Route::current()->getName()=='utilizadores.index' && Auth::user()->adm==1)
+    <div class="input-group mt-2 ml-1">
+        <div class="form-check form-check-inline">
+            <input type="checkbox" class="form-check-input" id="inputFiltroADM" name="filtroADM" value="1" {{old('adm', $request->filtroADM ?? '')=='1'?'checked':''}}>
+            <label class="form-check-label" for="inputFiltroADM">
+                Utilizador ADM
+            </label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input type="checkbox" class="form-check-input" id="inputFiltroBloq" name="filtroBloq" value="1" {{old('adm', $request->filtroBloq ?? '')=='1'?'checked':''}}>
+            <label class="form-check-label" for="inputFiltroBloq">
+                Utilizador Bloqueado
+            </label>
+        </div>
+    </div>
+    @endif
 </form>
 
 <table class="table">

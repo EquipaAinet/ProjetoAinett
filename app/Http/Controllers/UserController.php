@@ -14,13 +14,33 @@ use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request, User $user)
     {
-        $filtro = $request->filtro ?? '';
+        $filtroNome = $request->filtroNome ?? '';
 
-        $listaUtilizadores = User::where('name','LIKE','%'.$filtro.'%')->orWhere('email','LIKE','%'.$filtro.'%')->paginate(10);
+        $listaUtilizadores = $user->newQuery();
 
-        return view('utilizadores.index')->withListaUtilizadores($listaUtilizadores);
+        if ($request->has('filtroADM')) {
+            $listaUtilizadores->where('adm','=',$request->input('filtroADM'));
+        }
+
+        if ($request->has('filtroBloq')) {
+            $listaUtilizadores->where('bloqueado','=',$request->input('filtroBloq'));
+        }
+
+        $listaUtilizadores->where(function ($query) use ($filtroNome) {
+            $query->where('name','LIKE','%'.$filtroNome.'%')
+                ->orWhere('email','LIKE','%'.$filtroNome.'%');
+        });
+
+        return view('utilizadores.index')->withListaUtilizadores($listaUtilizadores->paginate(10))->withRequest($request);
+    }
+
+    public function filter(Request $request, User $user)
+    {
+
+
+        return view('utilizadores.filter')->withListaUtilizadores($user->paginate(10));
     }
 
     public function viewProfile($id)
@@ -31,10 +51,10 @@ class UserController extends Controller
     }
 
 
-   
-    public function update(Request $request,User $user) 
+
+    public function update(Request $request,User $user)
     {
-        
+
         //validar password
         if($request->current_password!=0){
             if (!(\Hash::check($request->current_password,$user->password))) {
@@ -47,7 +67,7 @@ class UserController extends Controller
         }
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
-            
+
             'email' => [
                 'required','email',
                 Rule::unique('users')->ignore($user->id),
@@ -63,22 +83,22 @@ class UserController extends Controller
         //Foto
         $urlFoto = null;
         if($request->hasFile('foto')){
-            
+
             Storage::delete('/public/fotos/'.$user->foto);
-            
+
             $path = $request->foto->store('public/fotos');
             $urlFoto = basename($path);
         }
 
-       
-        
+
+
         //Atualizar dados
         if ($request->filled('new_password')) {
             $user->fill([
                 'password' => Hash::make($validatedData['new_password']),
             ]);
         }
-        
+
 
         $user->fill([
             'name' => $validatedData['name'],
@@ -91,12 +111,12 @@ class UserController extends Controller
         return redirect()->route('pages.index')
             ->with('alert-msg', 'User "' . $user->name . '" alterado com sucesso!')
             ->with('alert-type', 'success');
-       
+
     }
-    
 
 
-    
+
+
 
     public function guardarTipo(Request $request, $id){
         $user = User::findOrFail($id);

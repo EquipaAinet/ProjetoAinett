@@ -24,11 +24,23 @@ class ContaController extends Controller
 
     public function edit(Request $request, Conta $conta)
     {
-        $filtro = $request->filtro ?? '';
+        $filtroNome = $request->filtroNome ?? '';
 
-        $listaUtilizadores = User::where('name','LIKE','%'.$filtro.'%')->orWhere('email','LIKE','%'.$filtro.'%')->paginate(10); //->get()
-        //$contaPartilhadas = Conta::where('id')
+        $listaUtilizadores = User::where('name','LIKE','%'.$filtroNome.'%')->orWhere('email','LIKE','%'.$filtroNome.'%')->paginate(10); //->get()
 
+    /*$listaUtilizadores = DB::table('users')
+                            ->join('autorizacoes_contas', function ($join) use ($conta) {
+                                $join->on('users.id', '=', 'autorizacoes_contas.user_id')
+                                    ->where('autorizacoes_contas.conta_id','!=', $conta->id);
+                            })
+                            ->where('users.name','LIKE','%'.$filtro.'%')
+                            ->orWhere('users.email','LIKE','%'.$filtro.'%')
+                            ->paginate(10);*/
+
+        //->join('contas','contas.id','=', 'autorizacoes_contas.conta_id')
+        //'users.id', '=', 'autorizacoes_contas.user_id')
+        //->on('autorizacoes_contas.conta_id','!=', $conta->id)
+        
         return view('conta.edit')->withConta($conta)->withListaUtilizadores($listaUtilizadores);
     }
 
