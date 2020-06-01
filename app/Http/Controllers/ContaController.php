@@ -111,9 +111,9 @@ class ContaController extends Controller
 
         $conta->fill($validated_data);
         $conta->save();
-       
+
         if($request->saldo_abertura!=$saldo_abertura_antigo){
-            
+
             $this->calculaSaldosUpdate($conta);
         }
 
@@ -219,30 +219,30 @@ class ContaController extends Controller
         $movimentos = Movimento::where('conta_id', $conta->id)
         ->orderby('data','ASC')
         ->get();
-       
+
 
         $count=0;
-        
-        
+
+
         foreach($movimentos as $mov){
             if($count==0){//primeiro movimento
                 $mov->saldo_inicial=$conta->saldo_abertura;
                 if($mov->tipo=="R"){
-                   
+
                     $mov->saldo_final=$mov->saldo_inicial+$mov->valor;
                     $mov->save();
-                    
-                    
+
+
                 }else{
-                    
+
                     $mov->saldo_final=$mov->saldo_inicial-$mov->valor;
                     $mov->save();
-                   
-                   
+
+
                 }
             }else{//alterar os movimentos para cima do valor atualizado
                 $mov->saldo_inicial=$movimentos[$count-1]->saldo_final;
-               
+
                 if($mov->tipo=="R"){
                     $mov->saldo_final=$movimentos[$count-1]->saldo_final+$mov->valor;
                     $mov->save();
@@ -250,17 +250,39 @@ class ContaController extends Controller
                     $mov->saldo_final=$movimentos[$count-1]->saldo_final-$mov->valor;
                     $mov->save();
                 }
-                
-                
 
-            }   
+
+
+            }
             $valor_saldo_atual=$mov->saldo_final;
-            
+
             $count++;
         }
         $conta->saldo_atual=$valor_saldo_atual;
         $conta->save();
 
+    }
+
+    public function readonly(Conta $conta, $id)
+    {
+        AutorizacoesConta::where(['conta_id'=>$conta->id, 'user_id'=>$id])->update(['so_leitura' => 1]);
+
+        $userName=User::where('id',$id)->pluck('name')->first();
+
+        return redirect()->route('conta.index')
+            ->with('alert-msg','Conta '.$conta->nome.' partilhada com '.$userName.' foi alterada para somente leitura.')
+            ->with('alert-type', 'success');
+    }
+
+    public function readwrite(Conta $conta, $id)
+    {
+        AutorizacoesConta::where(['conta_id'=>$conta->id, 'user_id'=>$id])->update(['so_leitura' => 0]);
+
+        $userName=User::where('id',$id)->pluck('name')->first();
+
+        return redirect()->route('conta.index')
+            ->with('alert-msg','Conta '.$conta->nome.' partilhada com '.$userName.' foi alterada para leitura e escrita.')
+            ->with('alert-type', 'success');
     }
 }
 

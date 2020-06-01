@@ -38,6 +38,8 @@ Route::patch('conta/recuperar/{id}', 'ContaController@recuperar')->name('conta.r
 Route::delete('conta/{id}/delete', 'ContaController@delete')->name('conta.delete');
 Route::get('conta/{conta}/edit/{id}', 'ContaController@share')->name('conta.share');
 Route::get('conta/{conta}/edit/{id}/unshare', 'ContaController@unshare')->name('conta.unshare');
+Route::get('conta/{conta}/edit/{id}/readonly', 'ContaController@readonly')->name('conta.readonly');
+Route::get('conta/{conta}/edit/{id}/readwrite', 'ContaController@readwrite')->name('conta.readwrite');
 
 //Movimentos
 Route::get('movimento/{movimento}/edit', 'MovimentoController@edit')->name('movimentos.edit');
