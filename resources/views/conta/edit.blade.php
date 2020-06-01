@@ -1,5 +1,7 @@
 @extends('layout_admin')
 @section('content')
+
+
     <form method="POST" action="{{route('conta.update', ['conta' => $conta]) }}" class="form-group">
         @csrf
         @method('PUT')
@@ -37,6 +39,11 @@
                 <td>{{ $user->name }}</td>
                 <td>{{ $user->email }}</td>
                 <td><a href="{{route('conta.unshare', ['conta' => $conta,'id' => $user->id])}}" class="btn btn-danger btn-sm" role="button" aria-pressed="true">Remover</a></td>
+                <td>Tipo Leitura:
+                    <a href="{{route('conta.readonly', ['conta' => $conta,'id' => $user->id])}}" class="btn btn-primary btn-sm" role="button" aria-pressed="true" title="Somente leitura"><i class="fas fa-fw fa-eye"></i></a>
+                    <a href="{{route('conta.readwrite', ['conta' => $conta,'id' => $user->id])}}" class="btn btn-primary btn-sm" role="button" aria-pressed="true" title="Escrita e leitura"><i class="fas fa-fw fa-edit"></i></a>
+                </td>
+
             </tr>
         @endforeach
     </table>
