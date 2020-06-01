@@ -43,7 +43,9 @@
                 </td>
                  @else
                 <td>
-                    <img class="img-profile rounded-circle" src="{{asset('contents'.$mov->imagem_doc)}}" width="50px" height="50px" >
+                    <a href="http://projetoainett.test/movimento/{{$mov->id}}/foto">
+                        <img class="img-profile rounded-circle" src="{{route('movimento.foto',['movimento'=>$mov])}}" width="50px" height="50px" >
+                    </a>
                 </td>
                
                 @endif

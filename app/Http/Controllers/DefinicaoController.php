@@ -45,7 +45,7 @@ class DefinicaoController extends Controller
         return view('definicoes.apagar')->withUser($user);
     }
 
-    public function destroy(User $user, Request $request)
+    public function destroy(User $user, Request $request)//apagar user em definitivo
     {
         $pass = $request->input('password');
         $hashedPassword = $user->password;

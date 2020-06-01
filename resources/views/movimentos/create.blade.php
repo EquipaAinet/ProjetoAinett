@@ -1,6 +1,6 @@
 @extends('layout_admin')
 @section('content')
-<form method="POST" action="{{route('movimentos.store', ['conta' => $conta]) }}" class="form-group">
+<form method="POST" action="{{route('movimentos.store', ['conta' => $conta]) }}" class="form-group" enctype="multipart/form-data">
         @csrf
         @method('POST')
         @include('movimentos.partials.create-edit')
