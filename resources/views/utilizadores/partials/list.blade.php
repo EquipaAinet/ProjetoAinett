@@ -32,6 +32,10 @@
         <th>Foto</th>
         <th>Nome</th>
         <th>Email</th>
+        @if(Route::current()->getName()=='utilizadores.index' && Auth::user()->adm==1)
+            <th>ADM?</th>
+            <th>Bloqueado?</th>
+        @endif
     </tr>
 
     @foreach ($listaUtilizadores as $user)
@@ -48,6 +52,28 @@
 
             <td>{{ $user->name }}</td>
             <td>{{ $user->email }}</td>
+
+            @if(Route::current()->getName()=='utilizadores.index' && Auth::user()->adm==1)
+                    @if($user->adm==1)
+                        <td>
+                            Sim
+                        </td>
+                    @else
+                        <td>
+                            Não
+                        </td>
+                    @endif
+
+                    @if($user->bloqueado==1)
+                        <td>
+                            Sim
+                        </td>
+                    @else
+                        <td>
+                            Não
+                        </td>
+                    @endif
+            @endif
             @if(Route::current()->getName()=='utilizadores.index')
                 <td><a href="{{route('utilizadores.view', ['id' => $user->id])}}" class="btn btn-primary btn-sm" role="button" aria-pressed="true">Visualizar</a></td>
             @elseif(Route::current()->getName()=='conta.edit')
