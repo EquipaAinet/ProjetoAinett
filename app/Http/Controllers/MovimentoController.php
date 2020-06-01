@@ -15,10 +15,25 @@ class MovimentoController extends Controller
 {
     public function index(Conta $conta)
     {
-        //dd($conta);
+        $categorias=DB::table('categorias')->get();
         $movimentos = Movimento::where('conta_id',$conta->id)->orderBy('data', 'DESC')->paginate(5);
         $tipoLeitura = AutorizacoesConta::where('conta_id',$conta->id)->pluck('so_leitura') ?? 0;
-       return view('movimentos.index')->withMovimentos($movimentos)->withConta($conta)->withTipoLeitura($tipoLeitura);
+       return view('movimentos.index')->withMovimentos($movimentos)->withConta($conta)->withTipoLeitura($tipoLeitura)->withcategorias($categorias);
+    }
+
+    public function filtro(Request $request,Conta $conta)
+    {
+        $filtro = $request->filtro ?? '';
+
+        $movimentos = Movimento::where('conta_id',$conta->id)
+        ->where('tipo','LIKE','%'.$filtro.'%')
+        ->orderBy('data', 'DESC')
+        ->paginate(5);
+
+        $categorias=DB::table('categorias')->get();
+       
+        $tipoLeitura = AutorizacoesConta::where('conta_id',$conta->id)->pluck('so_leitura') ?? 0;
+       return view('movimentos.index')->withMovimentos($movimentos)->withConta($conta)->withTipoLeitura($tipoLeitura)->withcategorias($categorias);
     }
 
     public function edit(Movimento $movimento)

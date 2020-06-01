@@ -49,6 +49,7 @@ Route::get('movimento/{conta}/create', 'MovimentoController@create')->name('movi
 Route::delete('movimento/{movimento}', 'MovimentoController@destroy')->name('movimentos.destroy');
 Route::get('movimento/{conta}/create', 'MovimentoController@create')->name('movimentos.create');
 Route::get('movimento/{movimento}/foto', 'MovimentoController@show_foto')->name('movimento.foto');
+Route::get('filtro/{conta}', 'MovimentoController@filtro')->name('movimento.filtro')->middleware('auth');
 
 
 //User
