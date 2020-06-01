@@ -1,6 +1,6 @@
 @extends('layout_admin')
 @section('content')
-    <form method="POST" action="{{route('movimentos.update', ['movimento' => $movimento]) }}" class="form-group">
+    <form method="POST" action="{{route('movimentos.update', ['movimento' => $movimento]) }}" class="form-group" enctype="multipart/form-data">
         @csrf
         @method('PUT')
         @include('movimentos.partials.create-edit')

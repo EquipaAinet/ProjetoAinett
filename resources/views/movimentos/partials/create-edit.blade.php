@@ -59,6 +59,15 @@
     @enderror
 </div>
 
+<div class="form-group">
+    <label for="inputImagem">Descrição</label>
+    <input type="file" class="form-control" name="foto" id="foto">
+    @error('foto')
+        <div class="small text-danger">{{$message}}</div>
+    @enderror
+</div>
+
+
 @push('scripts')
     <script>
 

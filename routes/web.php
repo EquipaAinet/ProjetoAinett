@@ -47,6 +47,10 @@ Route::put('movimento/{movimento}', 'MovimentoController@update')->name('movimen
 Route::post('movimento/{conta}', 'MovimentoController@store')->name('movimentos.store');
 Route::get('movimento/{conta}/create', 'MovimentoController@create')->name('movimentos.create');
 Route::delete('movimento/{movimento}', 'MovimentoController@destroy')->name('movimentos.destroy');
+Route::get('movimento/{conta}/create', 'MovimentoController@create')->name('movimentos.create');
+Route::get('movimento/{movimento}/foto', 'MovimentoController@show_foto')->name('movimento.foto');
+Route::get('filtro/{conta}', 'MovimentoController@filtro')->name('movimento.filtro')->middleware('auth');
+
 
 //User
 Route::get('definicoes/edit', 'DefinicaoController@edit')->name('definicoes.edit');
@@ -61,7 +65,7 @@ Route::put('utilizadores/view/{id}', 'UserController@guardarTipo')->name('utiliz
 //Route::get('menu', function(){
 //    return view('layout');
 //})->middleware('auth');
-$contents=Storage::get('docs/');
+
 
 Auth::routes(['verify' => true]);//ver se conta esta veridicada
 

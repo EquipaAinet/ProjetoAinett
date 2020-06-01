@@ -12,7 +12,7 @@ class Movimento extends Model
 
     use SoftDeletes;
 
-    protected $fillable = ['conta_id','data', 'valor', 'saldo_inicial', 'saldo_final', 'tipo', 'categoria_id', 'descricao'];
+    protected $fillable = ['conta_id','data', 'valor', 'saldo_inicial', 'saldo_final', 'tipo', 'categoria_id', 'descricao','imagem_doc'];
 
     protected $dates = ['deleted_at'];
 

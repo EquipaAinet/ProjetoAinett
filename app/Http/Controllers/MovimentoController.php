@@ -9,15 +9,31 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Storage;
 
 class MovimentoController extends Controller
 {
     public function index(Conta $conta)
     {
-        //dd($conta);
+        $categorias=DB::table('categorias')->get();
         $movimentos = Movimento::where('conta_id',$conta->id)->orderBy('data', 'DESC')->paginate(5);
         $tipoLeitura = AutorizacoesConta::where('conta_id',$conta->id)->pluck('so_leitura') ?? 0;
-       return view('movimentos.index')->withMovimentos($movimentos)->withConta($conta)->withTipoLeitura($tipoLeitura);
+       return view('movimentos.index')->withMovimentos($movimentos)->withConta($conta)->withTipoLeitura($tipoLeitura)->withcategorias($categorias);
+    }
+
+    public function filtro(Request $request,Conta $conta)
+    {
+        $filtro = $request->filtro ?? '';
+
+        $movimentos = Movimento::where('conta_id',$conta->id)
+        ->where('tipo','LIKE','%'.$filtro.'%')
+        ->orderBy('data', 'DESC')
+        ->paginate(5);
+
+        $categorias=DB::table('categorias')->get();
+       
+        $tipoLeitura = AutorizacoesConta::where('conta_id',$conta->id)->pluck('so_leitura') ?? 0;
+       return view('movimentos.index')->withMovimentos($movimentos)->withConta($conta)->withTipoLeitura($tipoLeitura)->withcategorias($categorias);
     }
 
     public function edit(Movimento $movimento)
@@ -42,6 +58,7 @@ class MovimentoController extends Controller
                 'tipo' =>                   'required|in:R,D',
                 'categoria_id' =>           'nullable|numeric',
                 'descricao' =>              'nullable|string',
+                'foto'=>              'nullable|image|max:8192',
             ]);
         }
 
@@ -54,6 +71,7 @@ class MovimentoController extends Controller
             'tipo' =>                   'required|in:R,D',
             'categoria_id' =>           'nullable|numeric',
             'descricao' =>              'nullable|string',
+            'foto'=>              'nullable|image|max:8192',
         ], [
 
             //error messages
@@ -62,65 +80,19 @@ class MovimentoController extends Controller
             'tipo.required' => '"Tipo" is required.',
         ]);
     }
-        //dd($validated_data);
 
-        //Atualiza automaticamente saldo final e inicial
+        //Alterar foto
+        $urlFoto = null;
 
-        /*
-        $conta = Conta::find($movimento->conta_id);
-        $movimentos = Movimento::where('conta_id', $conta->id)
-            ->where('data','>=',$movimento->data)
-            ->where('id', '>=', $movimento->id)
-            ->get();
-
-        //dd($movimentos);
-
-        
-        
-        $count=0;
-        
-
-        foreach($movimentos as $mov){
-            if($count==0){//primeira posicoa do valor atualizado
-                if($validated_data['tipo']=="R"){
-                    $mov->valor=$validated_data["valor"];
-                    $mov->saldo_final=$mov->saldo_inicial+$validated_data['valor'];
-
-                   $mov->fill([
-                                'data' => $validated_data['data'],
-                                'tipo' => $validated_data['tipo'],
-                                'descricao' => $validated_data['descricao'],
-                                'categoria_id'=>$validated_data['categoria_id'],
-                            ]);
-                    $mov->save();
-                }else{
-                    $mov->valor=$validated_data["valor"];
-                    $mov->saldo_final=$mov->saldo_inicial-$validated_data['valor']; 
-                    $mov->fill([
-                        'data' => $validated_data['data'],
-                        'tipo' => $validated_data['tipo'],
-                        'descricao' => $validated_data['descricao'],
-                        'categoria_id'=>$validated_data['categoria_id'],
-                    ]);
-                
-                    $mov->save();
-                }
-            }else{//alterar os movimentos para cima do valor atualizado
-                $mov->saldo_inicial=$movimentos[$count-1]->saldo_final;
-               
-                if($mov->tipo=="R"){
-                    $mov->saldo_final=$mov->saldo_inicial+$mov->valor;
-                    $mov->save();
-                }else{
-                    $mov->saldo_final=$mov->saldo_inicial-$mov->valor;
-                    $mov->save();
-                }
+        if(request()->hasFile('foto')){
+            
+            $path = request()->foto->store('docs');
+            $urlFoto = basename($path);
+            Storage::delete('docs'.$movimento->imagem_doc);
+        }
 
 
-            }   
-            $valor_saldo_atual=$mov->saldo_final;
-            $count++;
-        }*/
+       //alterar informacoes do movimento
         $conta = Conta::find($movimento->conta_id);
         $movimento->fill([
             'valor'=> $validated_data['valor'],
@@ -128,6 +100,7 @@ class MovimentoController extends Controller
             'tipo' => $validated_data['tipo'],
             'descricao' => $validated_data['descricao'],
             'categoria_id'=>$validated_data['categoria_id'],
+            'imagem_doc'=>$urlFoto,
         ]);
         $movimento->save();
 
@@ -152,12 +125,6 @@ class MovimentoController extends Controller
             $this->calculaSaldosUpdate($conta, $movimento);
         }
 
-
-
-
-
-       /* $conta->saldo_atual =$valor_saldo_atual;
-        $conta->save();*/
     
         return redirect()->route('movimento.index', compact('conta'))
             ->with('alert-msg', 'O Movimento com a data "' . $movimento->data . '" foi alterado com sucesso!')
@@ -182,6 +149,7 @@ class MovimentoController extends Controller
 
     public function store(Request $request, Conta $conta)
     {
+        
         if($request->tipo == 'R')
         {
             $validated_data = $request->validate([
@@ -190,18 +158,19 @@ class MovimentoController extends Controller
                 'tipo' =>                   'required|in:R,D',
                 'categoria_id' =>           'nullable|numeric',
                 'descricao' =>              'nullable|string',
+                'foto'=>              'nullable|image|max:8192',
             ]);
-        }
 
-
-    else
-    {
+            
+        } else
+        {
         $validated_data = $request->validate([
             'data' =>                   'required|date',
             'valor' =>                  'required|numeric|min:0',
             'tipo' =>                   'required|in:R,D',
             'categoria_id' =>           'nullable|numeric',
             'descricao' =>              'nullable|string',
+            'foto'=>              'nullable|image|max:8192',
         ], [
 
             //error messages
@@ -209,9 +178,9 @@ class MovimentoController extends Controller
             'valor.required' => '"Valor" is required.',
             'tipo.required' => '"Tipo" is required.',
         ]);
-    }
+         }
 
-        //dd($validated_data);
+   
         
         //Atualiza automaticamente saldo final e inicial
         if($validated_data['tipo'] == 'R')
@@ -227,6 +196,14 @@ class MovimentoController extends Controller
             $conta->save();
         }
 
+        $urlFoto = null;
+
+        if(request()->hasFile('foto')){
+            
+            $path = request()->foto->store('docs');
+            $urlFoto = basename($path);
+        }
+
         $movimento =  Movimento::create([
             'conta_id' => $conta->id,
             'data' => $validated_data['data'],
@@ -236,7 +213,10 @@ class MovimentoController extends Controller
             'tipo' => $validated_data['tipo'],
             'categoria_id' => $validated_data['categoria_id'],
             'descricao' => $validated_data['descricao'],
+            'imagem_doc'=>$urlFoto,
         ]);
+
+       
 
         $movimentoAntesDoAlterar = Movimento::where('conta_id', $conta->id)
         ->where('data','<',$movimento->data)
@@ -270,6 +250,10 @@ class MovimentoController extends Controller
         ->where('id', '!=', $movimento->id)
         ->orderBy('data','DESC')
         ->first();
+
+        if($movimento->imagem_doc!=null){
+            Storage::delete('docs/'.$movimento->imagem_doc);
+        }
        
 
         if($movimentoAntesDoAlterado==null){
@@ -506,6 +490,7 @@ class MovimentoController extends Controller
                         }
                 }else{//se nao ouver movimentos a seguir ao alterado
 
+                   
                     
                     $conta->saldo_atual=$movimentoAntesDoAlterado->saldo_final;
                     $conta->save();
@@ -514,4 +499,19 @@ class MovimentoController extends Controller
         }
        
     }
+
+    public function show_foto(Movimento $movimento){
+        if(!Auth::check()){
+           abort(401);
+        }
+
+        $user = Auth::user();
+        $conta = Conta::findOrFail($movimento->conta_id);
+
+        if($movimento->imagem_doc!=null && $user->id==$conta->user_id){
+            return response()->file(storage_path('app/docs/'.$movimento->imagem_doc));
+        }
+        abort(401);
+    }
+
 }

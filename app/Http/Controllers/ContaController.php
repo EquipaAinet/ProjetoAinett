@@ -12,6 +12,7 @@ use App\Movimento;
 use App\Conta;
 use App\User;
 use App\AutorizacoesConta;
+use Illuminate\Support\Facades\Storage;
 
 class ContaController extends Controller
 {
@@ -135,8 +136,6 @@ class ContaController extends Controller
     //soft dete da conta
     public function destroy(Conta $conta)
     {
-        $movimentos = Movimento::where('conta_id',$conta->id)->delete();
-
         $conta->delete();
         return redirect()->route('conta.index')
             ->with('alert-msg','Conta "' . $conta->nome . '" foi removida com sucesso!')
@@ -174,7 +173,7 @@ class ContaController extends Controller
 
 
     }
-    //contar a eliminar
+    //contar a eliminar em definitivo
     public function delete($id){
 
         $conta=Conta::onlyTrashed()
@@ -183,7 +182,18 @@ class ContaController extends Controller
 
 
         DB::table('autorizacoes_contas')->where('conta_id',$id)->delete();
-        Movimento::where('conta_id',$id)->forceDelete();
+        $movimentos=Movimento::where('conta_id',$id)->get();
+        
+        
+
+        foreach($movimentos as $mov){
+            if($mov->imagem_doc!=null){
+                Storage::delete('docs/'.$mov->imagem_doc);
+            }
+            $mov->forceDelete();
+
+        }
+        
         Conta::where('id',$id)->forceDelete();
 
 

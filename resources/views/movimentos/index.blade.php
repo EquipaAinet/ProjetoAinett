@@ -12,6 +12,15 @@
     @endif
 </div>
 
+<form method="GET" action="http://projetoainett.test/filtro/{{$conta->id}}" class="form-group">
+    <div class="input-group">
+        <input type="text" class="form-control" name="filtro" placeholder="Pesquisar movimentos por Tipo(R ou D) ">
+        <div class="input-group-append">
+            <button class="btn btn-outline-secondary" type="submit">Procurar <i class="fas fa-fw fa-search"></i></button>
+        </div>
+    </div>
+</form>
+
 
 <table class="table">
     <tr>
@@ -20,6 +29,7 @@
         <th>Saldo Inicial</th>
         <th>Saldo Final</th>
         <th>Tipo</th>
+        <th>Categoria</th>
         <th>Imagem</th>
 
     </tr>
@@ -37,13 +47,26 @@
                         Despesa
                     @endif
                 </td>
+                <td>
+                    @foreach($categorias as $cat)
+                        @if ($mov->categoria_id == $cat->id)
+                            {{$cat->nome}}
+                        @endif
+
+                    
+                    @endforeach
+
+                </td>
+
                 @if($mov->imagem_doc==null)
                 <td>
                     <p>Não Disponível</p>
                 </td>
                  @else
                 <td>
-                    <img class="img-profile rounded-circle" src="{{asset('contents'.$mov->imagem_doc)}}" width="50px" height="50px" >
+                    <a href="http://projetoainett.test/movimento/{{$mov->id}}/foto">
+                        <img class="img-profile rounded-circle" src="{{route('movimento.foto',['movimento'=>$mov])}}" width="50px" height="50px" >
+                    </a>
                 </td>
                
                 @endif
